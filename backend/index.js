@@ -8,12 +8,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Agar bisa diakses dari Frontend manapun (termasuk Vercel Frontend)
 app.use(cors());
 app.use(express.json());
 
 // === ROUTE TEST (Untuk Cek Server Jalan) ===
 app.get('/', (req, res) => {
-    res.send('Server TrueKicks dengan Supabase Berjalan! 🚀');
+    res.send('Server TrueKicks dengan Supabase Berjalan di Vercel! 🚀');
 });
 
 // === 1. ROUTE PRODUCTS (Semua Sepatu dari tabel 'products') ===
@@ -61,13 +62,12 @@ app.get('/api/apparel', async (req, res) => {
     }
 });
 
-// === 4. ROUTE CATEGORIES (BARU: Untuk Navbar & Filter) ===
+// === 4. ROUTE CATEGORIES (Untuk Navbar & Filter) ===
 app.get('/api/categories', async (req, res) => {
     try {
-        // Mengambil data dari tabel 'categories' yang sudah Anda buat
         const { data, error } = await supabase
             .from('categories') 
-            .select('*'); // Ambil semua kolom (biasanya id, name)
+            .select('*');
         
         if (error) throw error;
         res.json(data);
@@ -81,7 +81,6 @@ app.post('/api/register', async (req, res) => {
     const { full_name, email, password } = req.body;
 
     try {
-        // Cek apakah email sudah ada?
         const { data: existingUser } = await supabase
             .from('users')
             .select('email')
@@ -92,7 +91,6 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({ message: "Email sudah terdaftar!" });
         }
 
-        // Simpan user baru
         const { data, error } = await supabase
             .from('users')
             .insert([{ full_name, email, password }]) 
@@ -112,7 +110,6 @@ app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Cari user berdasarkan email dan password
         const { data: user, error } = await supabase
             .from('users')
             .select('*')
@@ -124,7 +121,6 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ message: "Email atau Password salah!" });
         }
 
-        // Jika ketemu, kirim data user
         res.json({ message: "Login berhasil!", user });
 
     } catch (error) {
@@ -154,35 +150,28 @@ app.get('/api/detail/:table/:id', async (req, res) => {
     }
 });
 
-// === 7. ROUTE ORDER / CHECKOUT (FIXED) ===
+// === 8. ROUTE ORDER / CHECKOUT ===
 app.post('/api/orders', async (req, res) => {
-    // Destructuring data dari frontend
     const { user_id, full_name, address, phone, total_price, items } = req.body; 
 
     try {
-        // PERBAIKAN: Konversi tipe data secara eksplisit
         const parsed_user_id = parseInt(user_id);
         const parsed_total_price = parseFloat(total_price);
         
-        // Cek data wajib
         if (isNaN(parsed_user_id) || !full_name || !address || !items || items.length === 0) {
             return res.status(400).json({ error: "Missing required order data." });
         }
         
-        // Prepare Payload
         const orderPayload = {
-            user_id: parsed_user_id, // Menggunakan integer/bigint yang sudah di-parse
+            user_id: parsed_user_id,
             full_name: full_name,
             address: address, 
             phone: phone,
-            total_price: parsed_total_price, // Menggunakan numeric yang sudah di-parse
+            total_price: parsed_total_price,
             items: items, 
             status: 'Processing',
         };
         
-        // Debugging final payload sebelum insert
-        console.log("[Backend] Final Insert Payload:", orderPayload);
-
         const { data, error } = await supabase
             .from('orders')
             .insert(orderPayload)
@@ -193,17 +182,19 @@ app.post('/api/orders', async (req, res) => {
         res.status(201).json({ message: "Order berhasil dibuat!", order: data });
 
     } catch (error) {
-        console.error("--- DATABASE INSERT FAILED ---");
         console.error("Error Detail:", error.message); 
-        console.error("Payload received:", req.body);
-        
-        // Mengirimkan pesan error yang lebih informatif ke frontend
         res.status(500).json({ error: "DB Insert Failed: " + error.message });
     }
 });
 
+// === PENTING UNTUK VERCEL ===
+// 1. Export 'app' sebagai default export (karena pakai ES Modules)
+export default app;
 
-// === JALANKAN SERVER ===
-app.listen(PORT, () => {
-    console.log(`Server TrueKicks berjalan di http://localhost:${PORT}`);
-});
+// 2. Hanya jalankan app.listen jika TIDAK di environment Production (Vercel)
+//    Ini agar codingan tetap jalan saat kamu tes di laptop (localhost)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server TrueKicks berjalan di http://localhost:${PORT}`);
+    });
+}

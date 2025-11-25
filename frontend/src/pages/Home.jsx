@@ -78,10 +78,15 @@ export default function Home() {
   const blackCollectionRef = useRef(null);
 
   // 1. FETCH DATA DARI API SUPABASE
-  useEffect(() => {
+useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        // Gunakan VITE_API_BASE_URL (yang mengarah ke Vercel Backend), BUKAN Supabase URL
+        const API_URL = import.meta.env.VITE_API_BASE_URL; 
+        
+        console.log("Fetching from:", API_URL); // Cek di console apakah link-nya benar
+
+        const response = await axios.get(`${API_URL}/api/products`);
         setProducts(response.data);
       } catch (error) {
         console.error("Gagal mengambil data:", error);

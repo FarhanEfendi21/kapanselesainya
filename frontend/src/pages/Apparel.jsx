@@ -22,20 +22,25 @@ export default function Apparel() {
   // Filter Tab
   const categories = ["All", "Hoodies", "T-Shirts", "Jackets", "Pants", "Jersey"];
 
-  useEffect(() => {
-    const fetchApparel = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/apparel");
-        setProducts(response.data);
-        setFilteredProducts(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchApparel();
-  }, []);
+useEffect(() => {
+    const fetchApparel = async () => {
+      try {
+        // 1. Ambil URL dasar dari Environment Variable
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+        
+        // 2. Gunakan URL tersebut untuk memanggil endpoint apparel
+        const response = await axios.get(`${API_URL}/api/apparel`);
+        
+        setProducts(response.data);
+        setFilteredProducts(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data apparel:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApparel();
+  }, []);
 
   // Filter Lokal (Tab Kategori di Frontend)
   const handleFilter = (category) => {

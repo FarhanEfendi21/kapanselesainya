@@ -176,10 +176,16 @@ export default function ProductDetail() {
             setUser(JSON.parse(storedUser));
         }
 
-        const productRes = await axios.get(`http://localhost:5000/api/detail/${type}/${id}`);
+        // === 1. Ambil URL Backend dari Environment Variable ===
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+        // === 2. Gunakan URL tersebut untuk fetch Detail Produk ===
+        const productRes = await axios.get(`${API_URL}/api/detail/${type}/${id}`);
+        
         setProduct(productRes.data);
         setActiveImage(productRes.data.image_url);
 
+        // Bagian Supabase (Reviews) tetap aman karena pakai client Supabase langsung
         const { data: reviewsData, error } = await supabase
             .from('reviews')
             .select(`
@@ -199,6 +205,7 @@ export default function ProductDetail() {
         setLoading(false);
       }
     };
+
     fetchData();
     window.scrollTo(0, 0);
   }, [type, id]);

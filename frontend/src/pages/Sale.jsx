@@ -15,10 +15,16 @@ export default function Sale() {
   const [particles, setParticles] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
+useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        // 1. Ambil URL Backend dari Environment Variable
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+        // 2. Gunakan URL tersebut
+        // Ganti hardcoded localhost dengan variable API_URL
+        const response = await axios.get(`${API_URL}/api/products`);
+        
         setProducts(response.data);
       } catch (error) {
         console.error("Gagal mengambil data:", error);

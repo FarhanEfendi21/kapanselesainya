@@ -20,16 +20,20 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(""); 
 
-  // === FUNGSI UTAMA LOGIN & REGISTER ===
+ // === FUNGSI UTAMA LOGIN & REGISTER (SUDAH DINAMIS) ===
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg(""); 
 
     try {
+      // 1. Ambil URL Backend dari Environment Variable
+      const API_URL = import.meta.env.VITE_API_BASE_URL;
+
       if (activeTab === "signup") {
         // --- LOGIC REGISTER ---
-        const response = await axios.post("http://localhost:5000/api/register", {
+        // Ganti hardcoded localhost dengan variable API_URL
+        const response = await axios.post(`${API_URL}/api/register`, {
           full_name: fullName,
           email: email,
           password: password
@@ -42,7 +46,8 @@ export default function Login() {
 
       } else {
         // --- LOGIC LOGIN ---
-        const response = await axios.post("http://localhost:5000/api/login", {
+        // Ganti hardcoded localhost dengan variable API_URL
+        const response = await axios.post(`${API_URL}/api/login`, {
           email: email,
           password: password
         });

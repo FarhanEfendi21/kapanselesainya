@@ -97,16 +97,19 @@ export default function Sneakers() {
 
 
   // --- USE EFFECT: FETCH PRODUCTS & APPLY INITIAL FILTER ---
-  useEffect(() => {
+useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/sneakers");
+        // 1. Ambil URL Backend dari Environment Variable
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+        // 2. Gunakan URL dinamis
+        const response = await axios.get(`${API_URL}/api/sneakers`);
+        
         const fetchedProducts = response.data;
         setProducts(fetchedProducts);
         
-        // Terapkan filter awal menggunakan state yang sudah diinisialisasi
-        // Kita gunakan 'initialTypeFilter' di sini agar sinkron saat pertama load
-        // Atau bisa gunakan 'activeTypeFilter' karena sudah di-set di useState awal
+        // Logic filter tetap sama
         const initialFiltered = applyFilter(fetchedProducts, searchKeyword, activeCategory, initialTypeFilter);
         setFilteredProducts(initialFiltered);
 
@@ -117,8 +120,8 @@ export default function Sneakers() {
       }
     };
     fetchProducts();
-    // Dependency array diperbarui agar merespon perubahan navigasi
-  }, [searchKeyword, initialTypeFilter]); 
+    // Pastikan dependency array sudah sesuai kebutuhan logic kamu
+  }, [searchKeyword, initialTypeFilter, activeCategory]);
 
   // Handler untuk Filter Brand
   const handleBrandFilter = (category) => {
