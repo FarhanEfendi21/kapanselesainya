@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./Context/CartContext.jsx";
 import { WishlistProvider } from "./Context/WishlistContext.jsx"; 
 
-// Import Pages (Dengan .jsx untuk kestabilan)
+// Import Pages - Laluan diperbetulkan
 import Splash from "./pages/Splash.jsx"; 
 import Login from "./pages/Login.jsx"; 
 import Home from "./pages/Home.jsx";
@@ -11,7 +11,7 @@ import Catalog from "./pages/Catalog.jsx";
 import Profile from "./pages/Profile.jsx";
 import Sneakers from "./pages/Sneakers.jsx";
 import Apparel from "./pages/Apparel.jsx";
-import DetailProduct from "./pages/DetailProduct.jsx"; // Disesuaikan dengan nama file yang ada
+import ProductDetail from "./pages/ProductDetail.jsx"; 
 import Layout from "./components/Layout.jsx"; 
 import Sale from "./pages/Sale.jsx";
 import Cart from "./pages/Cart.jsx";
@@ -31,8 +31,6 @@ function App() {
     const handleOffline = () => {
       setIsOffline(true);
       console.log("Gone Offline - Switching to Guest Mode");
-      // OPSIONAL: Alert jika ingin memberitahu user
-      // alert("Koneksi terputus. Beralih ke Mode Tamu (Offline).");
     };
 
     window.addEventListener('online', handleOnline);
@@ -47,18 +45,14 @@ function App() {
   // === 2. LOGIKA GUEST MODE OVERRIDE ===
   useEffect(() => {
     if (isOffline) {
-      // Simpan user asli sementara ke Session Storage
       const realUser = localStorage.getItem('user');
       if (realUser) sessionStorage.setItem('backup_user', realUser);
 
-      // Timpa dengan Data Guest di Local Storage
       const guestData = JSON.stringify({ full_name: 'Guest', email: 'guest@truekicks.com' });
       localStorage.setItem('user', guestData);
       
-      // Trigger event agar komponen lain (seperti Profile) sadar perubahan storage
       window.dispatchEvent(new Event('storage'));
     } else {
-      // Jika kembali online, kembalikan user asli
       const backupUser = sessionStorage.getItem('backup_user');
       if (backupUser) {
         localStorage.setItem('user', backupUser);
@@ -68,12 +62,9 @@ function App() {
   }, [isOffline]);
 
   return (
-    // Provider membungkus seluruh aplikasi
     <CartProvider> 
       <WishlistProvider>
         <BrowserRouter>
-          
-          {/* Indikator Offline (Muncul di atas semua halaman jika offline) */}
           {isOffline && (
             <div className="bg-red-500 text-white text-xs font-bold text-center py-1 fixed top-0 w-full z-[100]">
               OFFLINE MODE - GUEST ACCESS
@@ -84,6 +75,7 @@ function App() {
             <Route path="/" element={<Splash />} />
             <Route path="/login" element={<Login />} /> 
 
+            {/* Layout membungkus semua halaman utama */}
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/catalog" element={<Catalog />} />
@@ -91,8 +83,7 @@ function App() {
               <Route path="/apparel" element={<Apparel />} /> 
               <Route path="/sale" element={<Sale />} />
               <Route path="/wishlist" element={<Wishlist />} />
-              {/* Perbaikan: Menggunakan DetailProduct sesuai nama file */}
-              <Route path="/product/:type/:id" element={<DetailProduct />} />
+              <Route path="/product/:type/:id" element={<ProductDetail />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/profile" element={<Profile />} />
