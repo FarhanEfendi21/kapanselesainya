@@ -279,10 +279,7 @@ export default function Navbar() {
               </button>
             )}
 
-            {/* --- HAMBURGER MENU DIHAPUS ---
-              Tidak ada tombol hamburger di sini.
-              User mobile akan menggunakan Bottom Navigation.
-            */}
+            {/* --- HAMBURGER MENU DIHAPUS ---*/}
           </div>
         </div>
 
@@ -322,18 +319,6 @@ export default function Navbar() {
                     </ul>
                   </div>
                 ))}
-              </div>
-              <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-                 <div className="flex items-center gap-4">
-                    <div className="h-12 w-20 bg-gray-100 rounded-lg overflow-hidden">
-                       <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5d0975cc-294a-4b0a-aa53-8b920f880808/air-max-97-mens-shoes-LJmK45.png" className="w-full h-full object-contain mix-blend-multiply" alt="Featured" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-900">Featured: Nike P-6000</p>
-                      <p className="text-[10px] text-gray-500">New Metallic Silver Colorway</p>
-                    </div>
-                 </div>
-                 <Link to="/catalog" className="text-xs font-bold underline text-black hover:text-[#FF5500]">View All Collections</Link>
               </div>
             </div>
           </div>

@@ -187,12 +187,23 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
-// === PENTING UNTUK VERCEL ===
-// 1. Export 'app' sebagai default export (karena pakai ES Modules)
+app.get('/api/sale', async (req, res) => {
+    try {
+
+        const { data, error } = await supabase
+            .from('apparel') 
+            .select('*')
+            .limit(12); 
+        
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 export default app;
 
-// 2. Hanya jalankan app.listen jika TIDAK di environment Production (Vercel)
-//    Ini agar codingan tetap jalan saat kamu tes di laptop (localhost)
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Server TrueKicks berjalan di http://localhost:${PORT}`);

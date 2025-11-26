@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function Sale() {
+
+const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +27,7 @@ useEffect(() => {
 
         // 2. Gunakan URL tersebut
         // Ganti hardcoded localhost dengan variable API_URL
-        const response = await axios.get(`${API_URL}/api/products`);
+        const response = await axios.get(`${API_URL}/api/apparel`);
         
         setProducts(response.data);
       } catch (error) {
@@ -208,6 +212,14 @@ useEffect(() => {
               ))}
             </div>
 
+  {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-5" 
+             style={{
+               backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+               backgroundSize: '50px 50px'
+             }}
+        />
+
             {/* Sparkle Effects */}
             <div className="absolute top-10 left-20 w-3 h-3 bg-white rounded-full animate-sparkle"></div>
             <div className="absolute top-20 right-32 w-2 h-2 bg-yellow-200 rounded-full animate-sparkle" style={{ animationDelay: '0.5s' }}></div>
@@ -315,22 +327,6 @@ useEffect(() => {
                       </span>
                   </button>
                 </div>
-
-                {/* Stats Section */}
-                <div className="flex justify-center gap-8 md:gap-12 mt-10 pt-8 border-t border-white/20 animate-scale-in" style={{ animationDelay: '0.7s' }}>
-                  <div className="text-center group/stat cursor-pointer">
-                    <p className="text-2xl md:text-3xl font-black mb-1 group-hover/stat:scale-110 transition-transform">500+</p>
-                    <p className="text-xs md:text-sm text-white/80 font-medium uppercase tracking-wide">Products</p>
-                  </div>
-                  <div className="text-center group/stat cursor-pointer">
-                    <p className="text-2xl md:text-3xl font-black mb-1 group-hover/stat:scale-110 transition-transform">50+</p>
-                    <p className="text-xs md:text-sm text-white/80 font-medium uppercase tracking-wide">Brands</p>
-                  </div>
-                  <div className="text-center group/stat cursor-pointer">
-                    <p className="text-2xl md:text-3xl font-black mb-1 group-hover/stat:scale-110 transition-transform">⭐ 4.9</p>
-                    <p className="text-xs md:text-sm text-white/80 font-medium uppercase tracking-wide">Rating</p>
-                  </div>
-                </div>
             </div>
         </div>
 
@@ -347,11 +343,15 @@ useEffect(() => {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
                 {currentItems.map((item) => {
                   
-                  const fakeOriginalPrice = item.price * 1.3; 
-                  const discountPercentage = 30;
+                  const hasRealDiscount = item.discount_price != null;
+                            const currentPrice = hasRealDiscount ? item.discount_price : item.price;
+                            const originalPrice = hasRealDiscount ? item.price : item.price * 1.3;
+                            const discountPercentage = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
 
                   return (
-                    <div key={item.id} className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-red-100 transition-all duration-300 hover:-translate-y-1 cursor-pointer group h-full flex flex-col justify-between">
+                    <div key={item.id} 
+                    onClick={() => navigate(`/product/apparel/${item.id}`)}
+                    className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-red-100 transition-all duration-300 hover:-translate-y-1 cursor-pointer group h-full flex flex-col justify-between">
                        
                        <div>
                           <div className="relative h-[180px] bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-50 transition-colors overflow-hidden">
@@ -372,11 +372,11 @@ useEffect(() => {
 
                        <div className="mt-3">
                           <p className="text-gray-400 text-xs line-through decoration-red-400 decoration-2">
-                              Rp {(fakeOriginalPrice / 1000).toFixed(0).toLocaleString()}K
+                              Rp {(originalPrice / 1000).toFixed(0).toLocaleString()}K
                           </p>
                           <div className="flex items-center justify-between mt-1">
                               <p className="text-red-600 font-black text-lg">
-                                  Rp {(item.price / 1000).toLocaleString()}K
+                                  Rp {(currentPrice / 1000).toLocaleString()}K
                               </p>
                               <button className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors shadow-md shadow-red-200">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">

@@ -253,13 +253,15 @@ useEffect(() => {
             </div>
 
             {/* Floating Card (Desktop Only) */}
-            <div className="absolute top-[15%] right-[10%] z-30 group/card">
+            <div className="absolute top-[15%] right-[10%] z-30 group/card"
+                onClick={() => navigate('/product/sneakers/3')}
+                >
               <div className="relative bg-white/95 backdrop-blur-xl p-6 rounded-3xl shadow-2xl border border-white/50 w-72 transform transition-all duration-500 hover:scale-105 hover:-translate-y-2">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-400/30 via-purple-400/30 to-blue-400/30 opacity-0 group-hover/card:opacity-100 transition-opacity blur-2xl -z-10"></div>
                 
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-black text-gray-900 text-lg leading-tight mb-1">Nike P-6000 Flat Pewter</h3>
+                    <h3 className="font-black text-gray-900 text-lg leading-tight mb-1">Nike P-6000 Metallic Silver</h3>
                     <p className="text-xs text-gray-500 font-medium">Limited Edition</p>
                   </div>
                   
@@ -274,7 +276,7 @@ useEffect(() => {
                       <div>
                         <p className="text-xs text-gray-400 line-through mb-1">IDR 1,800,000</p>
                         <p className="text-2xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                          IDR 1,340,000
+                          IDR 1,460,000
                         </p>
                       </div>
                       <button className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-orange-500/40">
