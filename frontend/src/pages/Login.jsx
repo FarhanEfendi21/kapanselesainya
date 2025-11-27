@@ -2,11 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Import Icons
-import googleIcon from "../assets/google-icon.png"; 
-import facebookIcon from "../assets/facebook-icon.png"; 
-import twitterIcon from "../assets/twitter-icon.png"; 
-
 export default function Login() {
   const navigate = useNavigate();
   
@@ -202,28 +197,6 @@ export default function Login() {
               )}
             </button>
             
-            {/* Divider and Social Icons (Untuk styling) */}
-            <div className="relative flex items-center py-4">
-              <div className="flex-grow border-t border-gray-200"></div>
-              <span className="flex-shrink mx-4 text-gray-400 text-[10px] font-bold uppercase tracking-widest">Or continue with</span>
-              <div className="flex-grow border-t border-gray-200"></div>
-            </div>
-
-            <div className="flex justify-center gap-4">
-              {[
-                { icon: googleIcon, alt: "Google" },
-                { icon: facebookIcon, alt: "Facebook" },
-                { icon: twitterIcon, alt: "Twitter" },
-              ].map((social, index) => (
-                <button 
-                  key={index}
-                  type="button" 
-                  className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 bg-white"
-                >
-                  <img src={social.icon} alt={social.alt} className="w-5 h-5" />
-                </button>
-              ))}
-            </div>
 
             {/* Text Login/Sign up switch */}
             <div className="text-center mt-4">
