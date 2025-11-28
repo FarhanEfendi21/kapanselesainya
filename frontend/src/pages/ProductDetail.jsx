@@ -115,8 +115,12 @@ export default function ProductDetail() {
   const apparelSizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const shoeSizes = [38, 39, 40, 40.5, 41, 42, 42.5, 43, 44, 45, 46];
 
+const isApparel = 
+      type === 'apparel' || 
+      (product?.category && /apparel|hoodie|shirt|jacket|pants|jersey/i.test(product.category));
+
   // VARIABEL FINAL UKURAN: Dipilih berdasarkan 'type' dari URL
-  const sizes = type?.toLowerCase() === "apparel" ? apparelSizes : shoeSizes;
+ const sizes = isApparel ? apparelSizes : shoeSizes;
   // ------------------------------------
 
   // LOGIKA UTAMA
@@ -342,25 +346,25 @@ export default function ProductDetail() {
           <span className="text-gray-300">/</span>
 
           <span
-            onClick={() => {
-              if (type === "products") {
-                const isApparel = product.category
-                  ?.toLowerCase()
-                  .match(/hoodie|shirt|jacket|pants|jersey/);
-                navigate(isApparel ? "/apparel" : "/sneakers");
-              } else {
-                navigate(`/${type}`);
+           onClick={() => {
+                if (type === 'sale_products') { // Handle SALE
+                    navigate('/sale');
+                } else if (type === 'products') {
+                    const isApparel = product.category?.toLowerCase().match(/hoodie|shirt|jacket|pants|jersey/);
+                    navigate(isApparel ? '/apparel' : '/sneakers');
+                } else {
+                    navigate(`/${type}`);
               }
             }}
             className="cursor-pointer hover:text-black transition-colors"
           >
-            {type === "products"
-              ? product.category
-                  ?.toLowerCase()
-                  .match(/hoodie|shirt|jacket|pants|jersey/)
-                ? "APPAREL"
-                : "SNEAKERS"
-              : type}
+           {type === "sale_products" 
+  ? "SALE" 
+  : type === "products"
+    ? product.category?.toLowerCase().match(/hoodie|shirt|jacket|pants|jersey/)
+      ? "APPAREL"
+      : "SNEAKERS"
+    : type}
           </span>
 
           <span className="text-gray-300">/</span>

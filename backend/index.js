@@ -131,8 +131,10 @@ app.post('/api/login', async (req, res) => {
 // === 7. ROUTE DETAIL PRODUK (DINAMIS) ===
 app.get('/api/detail/:table/:id', async (req, res) => {
     const { table, id } = req.params;
-    const allowedTables = ['products', 'sneakers', 'apparel'];
-    if (!allowedTables.includes(table)) return res.status(400).json({ message: "Tabel tidak valid" });
+    const allowedTables = ['products', 'sneakers', 'apparel', 'sale_products'];
+    if (!allowedTables.includes(table)) {
+        return res.status(400).json({ message: "Akses tabel ditolak." }); // <--- Ini penyebab Error 400 Anda
+    }
 
     try {
         const { data, error } = await supabase
@@ -187,13 +189,13 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
+// === 9. ROUTE SALE (KHUSUS DARI TABEL 'sale_products') ===
 app.get('/api/sale', async (req, res) => {
     try {
-
         const { data, error } = await supabase
-            .from('apparel') 
+            .from('sale_products') // <--- GANTI JADI NAMA TABEL BARU
             .select('*')
-            .limit(12); 
+            .order('id', { ascending: false }); // Barang baru input muncul duluan
         
         if (error) throw error;
         res.json(data);

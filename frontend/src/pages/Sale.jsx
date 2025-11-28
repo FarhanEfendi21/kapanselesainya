@@ -4,6 +4,66 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+
+const SaleProductCard = ({ item, navigate }) => {
+  // --- LOGIKA HARGA (Sesuai Database Sale) ---
+  const originalPrice = item.price;
+  const currentPrice = item.discount_price || item.price; 
+  
+  // Hitung persentase
+  const discountPercentage = Math.round(((originalPrice - currentPrice) / (originalPrice || 1)) * 100);
+
+  return (
+    <div 
+      onClick={() => navigate(`/product/sale_products/${item.id}`)}
+      // Hapus class animasi scroll, sisakan hover effect saja
+      className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-red-100 transition-all duration-300 hover:-translate-y-1 cursor-pointer group h-full flex flex-col justify-between"
+    >
+        {/* Gambar & Badge */}
+        <div>
+            <div className="relative h-[180px] bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-50 transition-colors overflow-hidden">
+                {/* Badge Persen */}
+                {discountPercentage > 0 && (
+                    <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-md z-10 shadow-md">
+                        -{discountPercentage}%
+                    </span>
+                )}
+                
+                <img 
+                    src={item.image_url} 
+                    className="w-[85%] h-[85%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" 
+                    alt={item.name} 
+                    loading="lazy"
+                />
+            </div>
+            <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-1 group-hover:text-red-600 transition-colors">
+                {item.name}
+            </h3>
+            <p className="text-xs text-gray-500">{item.category}</p>
+        </div>
+
+        {/* Harga */}
+        <div className="mt-3">
+            {discountPercentage > 0 && (
+                <p className="text-gray-400 text-xs line-through decoration-red-400 decoration-2">
+                    Rp {(originalPrice / 1000).toLocaleString()}K
+                </p>
+            )}
+            <div className="flex items-center justify-between mt-1">
+                <p className="text-red-600 font-black text-lg">
+                    Rp {(currentPrice / 1000).toLocaleString()}K
+                </p>
+                <button className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors shadow-md shadow-red-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+  );
+};
+
 export default function Sale() {
 
 const navigate = useNavigate();
@@ -22,22 +82,21 @@ const navigate = useNavigate();
 useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // 1. Ambil URL Backend dari Environment Variable
         const API_URL = import.meta.env.VITE_API_BASE_URL;
-
-        // 2. Gunakan URL tersebut
-        // Ganti hardcoded localhost dengan variable API_URL
-        const response = await axios.get(`${API_URL}/api/apparel`);
         
-        setProducts(response.data);
+        const response = await axios.get(`${API_URL}/api/sale`);
+        
+        console.log("Data Sale:", response.data); 
+        setProducts(response.data); 
       } catch (error) {
-        console.error("Gagal mengambil data:", error);
+        console.error("Gagal mengambil data sale:", error);
       } finally {
         setLoading(false);
       }
     };
     fetchProducts();
 
+    
     // Generate floating particles untuk banner
     const newParticles = Array.from({ length: 20 }, (_, i) => ({
       id: i,
@@ -339,55 +398,16 @@ useEffect(() => {
              </div>
         ) : (
             <>
-              {/* TAMPILKAN ITEM */}
+             
+            {/* TAMPILKAN ITEM */}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
-                {currentItems.map((item) => {
-                  
-                  const hasRealDiscount = item.discount_price != null;
-                            const currentPrice = hasRealDiscount ? item.discount_price : item.price;
-                            const originalPrice = hasRealDiscount ? item.price : item.price * 1.3;
-                            const discountPercentage = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
-
-                  return (
-                    <div key={item.id} 
-                    onClick={() => navigate(`/product/apparel/${item.id}`)}
-                    className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-red-100 transition-all duration-300 hover:-translate-y-1 cursor-pointer group h-full flex flex-col justify-between">
-                       
-                       <div>
-                          <div className="relative h-[180px] bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-50 transition-colors overflow-hidden">
-                             <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-md z-10 shadow-md">
-                                -{discountPercentage}%
-                             </span>
-                             <img 
-                                src={item.image_url} 
-                                className="w-[85%] h-[85%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" 
-                                alt={item.name} 
-                             />
-                          </div>
-                          <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-1 group-hover:text-red-600 transition-colors">
-                            {item.name}
-                          </h3>
-                          <p className="text-xs text-gray-500">{item.category}</p>
-                       </div>
-
-                       <div className="mt-3">
-                          <p className="text-gray-400 text-xs line-through decoration-red-400 decoration-2">
-                              Rp {(originalPrice / 1000).toFixed(0).toLocaleString()}K
-                          </p>
-                          <div className="flex items-center justify-between mt-1">
-                              <p className="text-red-600 font-black text-lg">
-                                  Rp {(currentPrice / 1000).toLocaleString()}K
-                              </p>
-                              <button className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors shadow-md shadow-red-200">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                  </svg>
-                              </button>
-                          </div>
-                       </div>
-                    </div>
-                  );
-                })}
+                {currentItems.map((item) => (
+                    <SaleProductCard 
+                        key={item.id} 
+                        item={item} 
+                        navigate={navigate} 
+                    />
+                ))}
               </div>
 
               {/* PAGINATION CONTROLS */}

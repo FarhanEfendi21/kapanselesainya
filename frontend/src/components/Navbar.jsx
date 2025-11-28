@@ -35,6 +35,8 @@ export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showCatalog, setShowCatalog] = useState(false);
   
+const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
 
@@ -66,6 +68,11 @@ export default function Navbar() {
     }
   }, [showSearch]);
 
+useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setShowCatalog(false);
+  }, [location]);
+
   const handleLogout = () => {
     localStorage.removeItem("user"); 
     setUser(null); 
@@ -96,7 +103,7 @@ export default function Navbar() {
     <>
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-poppins ${
-          isScrolled || showCatalog 
+          isScrolled || showCatalog || isMobileMenuOpen
             ? "bg-white/90 backdrop-blur-md shadow-sm py-3" 
             : "bg-transparent py-5"
         }`}
@@ -105,7 +112,24 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
           
           {/* 1. LOGO */}
-          <div className="flex-shrink-0 z-20">
+          <div className="flex items-center gap-4 z-50">
+
+          <button 
+              className="hidden md:block lg:hidden text-gray-800 p-1" // <--- PERUBAHAN UTAMA DI SINI
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {/* Icon Hamburger / Close */}
+              {isMobileMenuOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              )}
+            </button>
+
             <Link to="/home" className={`flex items-center gap-2 group ${showSearch ? 'hidden md:flex' : 'flex'}`}>
               <h1 className="text-2xl md:text-3xl font-black italic tracking-tighter select-none">
                 <span className="text-gray-900 group-hover:text-black transition-colors">TRUE</span>
@@ -341,9 +365,62 @@ export default function Navbar() {
           </div>
         )}
         
-        {/* --- MOBILE MENU OVERLAY DIHAPUS ---
-           Sudah tidak diperlukan karena navigasi mobile ditangani oleh BottomNav
-        */}
+      {/* === MOBILE MENU DRAWER (SLIDE DOWN) === */}
+        <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[500px] opacity-100 mt-4 border-t pt-4' : 'max-h-0 opacity-0'}`}>
+           <div className="flex flex-col gap-4 text-sm font-bold text-gray-700">
+              <Link to="/home" className="p-2 hover:bg-gray-50 rounded-lg">HOME</Link>
+              
+              {/* Mobile Catalog Accordion */}
+              <div>
+                 <button onClick={() => setShowCatalog(!showCatalog)} className="w-full text-left p-2 flex justify-between items-center hover:bg-gray-50 rounded-lg">
+                    CATALOG
+                    <span className={`transform transition-transform ${showCatalog ? 'rotate-180' : ''}`}>▼</span>
+                 </button>
+                 {showCatalog && (
+                    <div className="pl-4 py-2 space-y-3 bg-gray-50/50 rounded-lg mt-1">
+                       {catalogCategories.map((cat, idx) => (
+                          <div key={idx}>
+                             <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">{cat.title}</p>
+                             <div className="flex flex-col gap-2 pl-2 border-l-2 border-gray-200">
+                                {cat.items.map((item, i) => (
+                                   <Link 
+                                     key={i} 
+                                     to="/sneakers" 
+                                     state={{ keyword: item }}
+                                     className="text-gray-600 font-medium text-xs"
+                                   >
+                                     {item}
+                                   </Link>
+                                ))}
+                             </div>
+                          </div>
+                       ))}
+                    </div>
+                 )}
+              </div>
+
+              <Link to="/sneakers" className="p-2 hover:bg-gray-50 rounded-lg">SNEAKERS</Link>
+              <Link to="/apparel" className="p-2 hover:bg-gray-50 rounded-lg">APPAREL</Link>
+              <Link to="/sale" className="p-2 text-red-500 hover:bg-red-50 rounded-lg">SALE</Link>
+              
+              <div className="h-px bg-gray-100 my-1"></div>
+              
+              {/* Mobile User Actions */}
+              {user ? (
+                 <div className="flex justify-between items-center p-2 bg-gray-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">
+                          {getInitials(user.full_name)}
+                       </div>
+                       <span className="truncate max-w-[150px]">{user.full_name}</span>
+                    </div>
+                    <button onClick={handleLogout} className="text-xs text-red-500 font-bold border border-red-200 px-3 py-1 rounded-full">LOGOUT</button>
+                 </div>
+              ) : (
+                 <button onClick={() => navigate('/login')} className="w-full bg-black text-white py-3 rounded-xl font-bold">LOGIN / REGISTER</button>
+              )}
+           </div>
+        </div>
 
       </nav>
     </>

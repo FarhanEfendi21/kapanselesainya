@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+
 export default function Apparel() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -84,9 +85,7 @@ useEffect(() => {
             </p>
         </div>
         
-        {/* ========================================================
-    MODERN RESPONSIVE APPAREL FILTER
-======================================================== */}
+
 {/* 1. CONTAINER UTAMA (Compact Spacing) */}
 <div className="lg:col-span-3 mb-4 lg:mb-8">
 

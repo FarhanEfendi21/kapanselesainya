@@ -5,9 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabaseClient";
 
-// =========================================
-// 1. CUSTOM HOOK: UNTUK MENDETEKSI SCROLL
-// =========================================
+
 const useScrollAnimation = () => {
   const elementRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
