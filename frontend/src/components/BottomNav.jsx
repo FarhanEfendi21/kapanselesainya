@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../Context/CartContext";
 
-// --- IMPORT ICON MODERN DARI REACT-ICONS (Heroicons v2 & Lucide) ---
-// Kita import versi Outline dan Solid untuk Home & User
 import { HiHome, HiOutlineHome, HiUser, HiOutlineUser } from "react-icons/hi2";
-import { HiOutlineShoppingBag, HiOutlineHeart } from "react-icons/hi2"; // Untuk cart & wishlist
-// Icon untuk menu popup (Lucide sering dipakai karena rapi)
+import { HiOutlineShoppingBag, HiOutlineHeart } from "react-icons/hi2";
 import { GiRunningShoe, GiHoodie } from "react-icons/gi";
 import { FiPercent, FiHeart } from "react-icons/fi";
-import { RiAddFill } from "react-icons/ri"; // Icon tambah tengah yang tebal
+import { RiAddFill } from "react-icons/ri";
 
 export default function BottomNav() {
   const navigate = useNavigate();
@@ -98,7 +95,7 @@ export default function BottomNav() {
           3. FLOATING CART BUTTON (PREMIUM GLOW STYLE)
          ================================================================== */}
       <div
-        className={`fixed bottom-24 right-6 z-40 md:hidden transition-all duration-300 ${
+        className={`fixed bottom-28 right-6 z-40 md:hidden transition-all duration-300 ${
           showMenu ? "blur-sm opacity-50" : "opacity-100"
         }`}
       >

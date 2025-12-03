@@ -228,7 +228,7 @@ export default function Navbar() {
           ================================================== */}
           <div className="flex items-center gap-3 md:gap-5 flex-shrink-0 z-20">
             {/* === WISHLIST BUTTON (MODERN STYLE) === */}
-            <div className="relative">
+            <div className="relative hidden md:block">
               <button
                 onClick={() => setShowWishlist(!showWishlist)}
                 className={`
@@ -374,7 +374,7 @@ export default function Navbar() {
             {/* CART */}
             <button
               onClick={() => navigate("/cart")}
-              className="group relative p-2 rounded-full hover:bg-orange-50 transition-all duration-300"
+              className="hidden md:block group relative p-2 rounded-full hover:bg-orange-50 transition-all duration-300"
             >
               {/* Icon */}
               <svg
