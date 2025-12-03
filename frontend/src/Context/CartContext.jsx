@@ -8,36 +8,73 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
+const getCurrentUserId = () => {
+  const storedUser = localStorage.getItem("user");
+  if (!storedUser) return null;
+
+  const parsedUser = JSON.parse(storedUser);
+
+  // === PERBAIKAN DI SINI ===
+  // Jika emailnya mengandung kata 'guest', anggap user belum login (return null)
+  if (parsedUser.email && parsedUser.email.includes("guest")) {
+    return null;
+  }
+
+  return parsedUser.id;
+};
+
 // 3. Buat Provider (Penyedia Data)
 export const CartProvider = ({ children }) => {
-  // Cek LocalStorage saat awal load agar data tidak hilang saat refresh
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cartItems");
+    const userId = getCurrentUserId();
+
+    if (!userId) return [];
+
+    const savedCart = localStorage.getItem(`cartItems_${userId}`);
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   // Simpan ke LocalStorage setiap kali keranjang berubah
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    const userId = getCurrentUserId();
+
+    // Hanya simpan jika ada User ID (Guest tidak disimpan ke localStorage permanen)
+    if (userId) {
+      localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
+    }
   }, [cartItems]);
+
+  const refreshCart = () => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      // Jika User Login, muat data dia
+      const savedCart = localStorage.getItem(`cartItems_${userId}`);
+      setCartItems(savedCart ? JSON.parse(savedCart) : []);
+    } else {
+      // Jika Guest, KOSONGKAN keranjang
+      setCartItems([]);
+    }
+  };
 
   // Fungsi: Tambah ke Keranjang
   const addToCart = (product) => {
+    const userId = getCurrentUserId();
+
+    // Proteksi Ganda: Jika Guest entah bagaimana bisa akses fungsi ini, tolak.
+    if (!userId) return;
+
     setCartItems((prevItems) => {
-      // Cek apakah barang dengan ID dan Size yang sama sudah ada?
       const existingItem = prevItems.find(
         (item) => item.id === product.id && item.size === product.size
       );
 
       if (existingItem) {
-        // Jika ada, tambah quantity-nya saja
         return prevItems.map((item) =>
           item.id === product.id && item.size === product.size
             ? { ...item, quantity: item.quantity + product.quantity }
             : item
         );
       } else {
-        // Jika belum ada, masukkan sebagai item baru
         return [...prevItems, product];
       }
     });
@@ -45,12 +82,12 @@ export const CartProvider = ({ children }) => {
 
   // Fungsi: Hapus dari Keranjang
   const removeFromCart = (id, size) => {
-    setCartItems((prevItems) => 
+    setCartItems((prevItems) =>
       prevItems.filter((item) => !(item.id === id && item.size === size))
     );
   };
 
-  // Fungsi: Update Quantity (+ / -)
+  // Fungsi: Update Quantity
   const updateQuantity = (id, size, newQuantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -62,32 +99,39 @@ export const CartProvider = ({ children }) => {
   };
 
   // Hitung Total Harga & Total Item
-  // BARIS BARU (lebih robust / kuat)
-const totalPrice = cartItems.reduce((total, item) => {
-  // 1. Konversi price dan quantity menjadi float (angka)
-  const price = parseFloat(item.price) || 0; // Jika gagal parse, anggap 0
-  const quantity = parseFloat(item.quantity) || 0; // Pastikan quantity juga Number
+  const totalPrice = cartItems.reduce((total, item) => {
+    const price = parseFloat(item.price) || 0;
+    const quantity = parseFloat(item.quantity) || 0;
+    return total + price * quantity;
+  }, 0);
 
-  // 2. Lakukan perhitungan
-  return total + (price * quantity);
-}, 0);
-  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
-const clearCart = () => {
-    setCartItems([]); // Mengosongkan state
-    localStorage.removeItem("cartItems"); // Hapus dari penyimpanan lokal
+  // Fungsi Clear Cart (Hapus data user saat ini saja)
+  const clearCart = () => {
+    setCartItems([]);
+    const userId = getCurrentUserId();
+    if (userId) {
+      localStorage.removeItem(`cartItems_${userId}`);
+    }
   };
 
   return (
-    <CartContext.Provider value={{ 
-      cartItems, 
-      addToCart, 
-      removeFromCart, 
-      updateQuantity, 
-      clearCart,
-      totalPrice, 
-      totalItems 
-    }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        refreshCart,
+        totalPrice,
+        totalItems,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

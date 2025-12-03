@@ -37,13 +37,15 @@ export default function Checkout() {
       setUser(JSON.parse(storedUser));
     } else {
       toast.error("Please login to checkout");
-      navigate("/login");
+
+      // === PERBAIKAN: TAMBAHKAN { replace: true } ===
+      // Agar kalau user tekan Back, dia tidak kembali ke halaman Checkout yang kosong/error
+      navigate("/login", { replace: true });
     }
 
     if (cartItems.length === 0) {
-      navigate("/cart");
+      navigate("/cart", { replace: true }); // Ini juga bagus pakai replace
     }
-    window.scrollTo(0, 0);
   }, [cartItems, navigate]);
 
   const handleChange = (e) => {

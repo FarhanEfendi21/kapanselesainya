@@ -457,18 +457,18 @@ export default function Home() {
       </section>
 
       {/* ===========================
-          3. OUR TOP PICKS (Carousel) - MODERN SPOTLIGHT STYLE
+          3. OUR TOP PICKS (Carousel) - RESPONSIVE TUNED
          =========================== */}
       <section
         id="best-sellers"
         ref={topPicksRef}
-        className="max-w-7xl mx-auto px-6 py-24 scroll-mt-32 relative"
+        className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 scroll-mt-32 relative"
       >
-        {/* Decorative Background Blob (Optional, subtle behind the section) */}
+        {/* Decorative Background Blob */}
         <div className="absolute top-1/2 left-0 w-96 h-96 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-y-1/2 -z-10"></div>
 
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12 gap-6">
           <div className="max-w-lg">
             <div className="flex items-center gap-2 mb-2">
               <svg
@@ -482,21 +482,20 @@ export default function Home() {
                 Curated Collection
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
               TOP{" "}
               <span className="relative inline-block">
                 PICKS
-                <span className="absolute bottom-1 left-0 w-full h-3 bg-orange-200/50 -z-10 rounded-sm transform -rotate-1"></span>
+                <span className="absolute bottom-1 left-0 w-full h-2 md:h-3 bg-orange-200/50 -z-10 rounded-sm transform -rotate-1"></span>
               </span>
             </h2>
-            <p className="text-gray-500 mt-4 text-lg">
-              The most sought-after silhouettes of the season, handpicked for
-              your style.
+            <p className="text-gray-500 mt-2 md:mt-4 text-sm md:text-lg">
+              The most sought-after silhouettes of the season.
             </p>
           </div>
 
-          {/* Custom Navigation Buttons */}
-          <div className="flex gap-4">
+          {/* Custom Navigation Buttons (Hidden di Mobile agar lebih bersih) */}
+          <div className="hidden md:flex gap-4">
             <button
               onClick={() => scroll("left")}
               className="group w-14 h-14 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:border-black transition-all duration-300 shadow-sm hover:shadow-xl"
@@ -541,44 +540,47 @@ export default function Home() {
         {/* Carousel Container */}
         <div
           ref={scrollRef}
-          className="flex gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-12 pt-4 scroll-smooth px-4"
+          className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-12 pt-4 scroll-smooth px-2 md:px-4"
         >
           {loading && topPicks.length === 0
             ? [...Array(3)].map((_, i) => (
                 <div
                   key={i}
-                  className="min-w-[300px] h-[400px] bg-gray-100 rounded-[2rem] animate-pulse flex-shrink-0"
+                  // SKELETON RESPONSIVE
+                  className="min-w-[260px] md:min-w-[340px] h-[350px] md:h-[400px] bg-gray-100 rounded-[2rem] animate-pulse flex-shrink-0"
                 ></div>
               ))
             : topPicks.map((item, index) => (
                 <div
                   key={item.id}
-                  className="min-w-[300px] md:min-w-[340px] snap-center flex-shrink-0 group"
+                  // UBAH LEBAR KARTU DI SINI (260px di mobile, 340px di desktop)
+                  className="min-w-[260px] md:min-w-[340px] snap-center flex-shrink-0 group"
                 >
                   <div
                     onClick={() => navigate(`/product/sneakers/${item.id}`)}
-                    className="bg-white p-5 rounded-[2.5rem] relative transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.3)] border border-transparent hover:border-orange-100 h-full flex flex-col justify-between cursor-pointer"
+                    // Padding dikurangi di mobile (p-4)
+                    className="bg-white p-4 md:p-5 rounded-[2rem] relative transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.3)] border border-transparent hover:border-orange-100 h-full flex flex-col justify-between cursor-pointer"
                   >
                     {/* Image Area */}
                     <div>
-                      <div className="relative h-[240px] rounded-[2rem] flex items-center justify-center mb-6 overflow-hidden bg-gray-50 group-hover:bg-orange-50/30 transition-colors duration-500">
+                      {/* TINGGI GAMBAR DIKURANGI DI MOBILE (h-[180px]) */}
+                      <div className="relative h-[180px] md:h-[240px] rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center mb-4 md:mb-6 overflow-hidden bg-gray-50 group-hover:bg-orange-50/30 transition-colors duration-500">
                         {/* Ranking Badge */}
-                        <div className="absolute top-4 left-4 z-20">
-                          <div className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg shadow-black/20">
+                        <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20">
+                          <div className="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded-full flex items-center justify-center font-black text-xs md:text-sm shadow-lg shadow-black/20">
                             #{index + 1}
                           </div>
                         </div>
 
-                        {/* Favorite Button (Top Right) */}
+                        {/* Favorite Button */}
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // Mencegah klik tombol love memicu navigasi ke detail
-                            // Tambahkan logika wishlist di sini nanti
+                            e.stopPropagation();
                           }}
-                          className="absolute top-4 right-4 z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300"
+                          className="absolute top-3 right-3 md:top-4 md:right-4 z-20 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 transform md:translate-y-2 md:group-hover:translate-y-0 duration-300"
                         >
                           <svg
-                            className="w-5 h-5"
+                            className="w-4 h-4 md:w-5 md:h-5"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -590,47 +592,46 @@ export default function Home() {
                           </svg>
                         </button>
 
-                        {/* Background Glow behind Shoe */}
-                        <div className="absolute w-40 h-40 bg-orange-400/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute w-32 h-32 md:w-40 md:h-40 bg-orange-400/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        {/* Animated Image */}
+                        {/* Animated Image (Lebar disesuaikan agar tidak terlalu penuh di mobile) */}
                         <AnimatedImage
                           src={item.image_url}
-                          className="w-[90%] h-[90%] object-contain mix-blend-multiply z-10 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-rotate-12"
+                          className="w-[85%] md:w-[90%] h-[85%] md:h-[90%] object-contain mix-blend-multiply z-10 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-rotate-12"
                           alt={item.name}
                         />
                       </div>
 
                       {/* Content */}
-                      <div className="px-2">
-                        <p className="text-orange-500 text-xs font-bold uppercase tracking-wider mb-1">
+                      <div className="px-1 md:px-2">
+                        <p className="text-orange-500 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1">
                           {item.category}
                         </p>
-                        <h3 className="font-black text-gray-900 text-xl leading-tight mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
+                        <h3 className="font-black text-gray-900 text-lg md:text-xl leading-tight mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
                           {item.name}
                         </h3>
                       </div>
                     </div>
 
                     {/* Footer Action */}
-                    <div className="px-2 pt-4 flex items-center justify-between border-t border-dashed border-gray-100 mt-2">
+                    <div className="px-1 md:px-2 pt-3 md:pt-4 flex items-center justify-between border-t border-dashed border-gray-100 mt-2">
                       <div className="flex flex-col">
                         <span className="text-[10px] text-gray-400 font-medium uppercase">
                           Current Price
                         </span>
-                        <p className="text-xl font-black text-gray-900">
+                        <p className="text-lg md:text-xl font-black text-gray-900">
                           {(item.price / 1000).toLocaleString()}K
                         </p>
                       </div>
 
-                      <button className="relative overflow-hidden w-12 h-12 bg-gray-900 text-white rounded-2xl flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300 shadow-lg shadow-gray-900/20 group-hover:shadow-orange-500/40">
+                      <button className="relative overflow-hidden w-10 h-10 md:w-12 md:h-12 bg-gray-900 text-white rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300 shadow-lg shadow-gray-900/20 group-hover:shadow-orange-500/40">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth={2.5}
                           stroke="currentColor"
-                          className="w-5 h-5 relative z-10"
+                          className="w-4 h-4 md:w-5 md:h-5 relative z-10"
                         >
                           <path
                             strokeLinecap="round"
@@ -647,14 +648,14 @@ export default function Home() {
       </section>
 
       {/* ===========================
-          4. NEW ARRIVALS - MODERN FRESH STYLE
+          4. NEW ARRIVALS - RESPONSIVE 2-COLUMN GRID
          =========================== */}
       <section
         id="new-arrivals"
-        className="max-w-7xl mx-auto px-6 mb-24 scroll-mt-32"
+        className="max-w-7xl mx-auto px-4 md:px-6 mb-24 scroll-mt-32"
       >
-        {/* Header dengan dekorasi modern */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="relative flex h-3 w-3">
@@ -665,7 +666,7 @@ export default function Home() {
                 Just Dropped
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-none">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
               FRESH{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">
                 KICKS.
@@ -674,9 +675,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* GRID LAYOUT PERBAIKAN:
+            - grid-cols-2 (Mobile)
+            - gap-3 (Mobile) -> gap-8 (Desktop)
+        */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
           {loading && newArrivals.length === 0 ? (
-            <p className="col-span-4 text-center py-20 text-gray-400 animate-pulse">
+            <p className="col-span-2 lg:col-span-4 text-center py-20 text-gray-400 animate-pulse">
               Fetching latest drops...
             </p>
           ) : (
@@ -684,81 +689,76 @@ export default function Home() {
               <div
                 key={item.id}
                 onClick={() => navigate(`/product/products/${item.id}`)}
-                className="group relative bg-white rounded-[2rem] p-4 transition-all duration-500 hover:shadow-[0_20px_50px_-12px_rgba(124,58,237,0.15)] hover:-translate-y-2 border border-gray-100 hover:border-purple-100 cursor-pointer"
+                // Padding lebih kecil di mobile (p-3)
+                className="group relative bg-white rounded-2xl md:rounded-[2rem] p-3 md:p-4 transition-all duration-500 hover:shadow-[0_20px_50px_-12px_rgba(124,58,237,0.15)] hover:-translate-y-2 border border-gray-100 hover:border-purple-100 cursor-pointer h-full flex flex-col justify-between"
               >
                 {/* Image Container */}
-                <div className="relative h-[220px] bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] rounded-[1.5rem] flex items-center justify-center mb-5 overflow-hidden group-hover:from-purple-50 group-hover:to-white transition-colors duration-500">
-                  {/* Floating Badge */}
-                  <div className="absolute top-4 left-4 z-20">
-                    <div className="bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/50 flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse"></div>
-                      <span className="text-[10px] font-bold text-gray-800 tracking-wider uppercase">
-                        New
-                      </span>
+                <div>
+                  {/* Tinggi gambar lebih kecil di mobile (h-[140px]) */}
+                  <div className="relative h-[140px] md:h-[220px] bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] rounded-xl md:rounded-[1.5rem] flex items-center justify-center mb-3 md:mb-5 overflow-hidden group-hover:from-purple-50 group-hover:to-white transition-colors duration-500">
+                    {/* Floating Badge (Kecilkan font di mobile) */}
+                    <div className="absolute top-2 left-2 md:top-4 md:left-4 z-20">
+                      <div className="bg-white/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-1.5 rounded-full shadow-sm border border-white/50 flex items-center gap-1.5">
+                        <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse"></div>
+                        <span className="text-[8px] md:text-[10px] font-bold text-gray-800 tracking-wider uppercase">
+                          New
+                        </span>
+                      </div>
                     </div>
+
+                    <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    {/* Animated Image */}
+                    <AnimatedImage
+                      src={item.image_url}
+                      className="w-[85%] md:w-[90%] h-[85%] md:h-[90%] object-contain mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-rotate-[8deg]"
+                      alt={item.name}
+                    />
                   </div>
 
-                  {/* Background Blob Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                  {/* Animated Image */}
-                  <AnimatedImage
-                    src={item.image_url}
-                    className="w-[90%] h-[90%] object-contain mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-rotate-[8deg]"
-                    alt={item.name}
-                  />
-
-                  {/* Quick Action Overlay (Hanya muncul saat hover) */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-20 w-[90%]">
-                    <button className="w-full py-3 bg-white/90 backdrop-blur-md text-gray-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg hover:bg-black hover:text-white transition-colors border border-white/50">
-                      Quick View
-                    </button>
+                  {/* Product Info */}
+                  <div className="px-1 md:px-2 pb-2">
+                    <p className="text-[10px] md:text-xs font-bold text-gray-400 mb-0.5 md:mb-1 uppercase tracking-wide truncate">
+                      {item.category}
+                    </p>
+                    <h3 className="font-bold text-gray-900 text-sm md:text-lg leading-tight mb-2 md:mb-3 group-hover:text-purple-700 transition-colors line-clamp-2 md:line-clamp-1 h-[2.5em] md:h-auto">
+                      {item.name}
+                    </h3>
                   </div>
                 </div>
 
-                {/* Product Info */}
-                <div className="px-2 pb-2">
-                  <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">
-                    {item.category}
-                  </p>
-                  <h3 className="font-bold text-gray-900 text-lg leading-tight mb-3 group-hover:text-purple-700 transition-colors line-clamp-1">
-                    {item.name}
-                  </h3>
-
-                  <div className="flex items-center justify-between border-t border-gray-50 pt-4">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] text-gray-400 font-medium">
-                        Price
-                      </span>
-                      <span className="text-gray-900 font-black text-lg">
-                        Rp {(item.price / 1000).toLocaleString()}K
-                      </span>
-                    </div>
-
-                    {/* Modern Add Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Mencegah navigasi saat tombol + diklik
-                        // Logika add to cart bisa ditaruh sini
-                      }}
-                      className="h-10 w-10 bg-gray-900 rounded-full flex items-center justify-center text-white shadow-lg shadow-gray-900/20 group-hover:scale-110 group-hover:bg-purple-600 group-hover:shadow-purple-600/30 transition-all duration-300"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </button>
+                {/* Footer Price & Button */}
+                <div className="px-1 md:px-2 flex items-center justify-between border-t border-gray-50 pt-2 md:pt-4 mt-auto">
+                  <div className="flex flex-col">
+                    <span className="hidden md:block text-[10px] text-gray-400 font-medium">
+                      Price
+                    </span>
+                    <span className="text-gray-900 font-black text-sm md:text-lg">
+                      {(item.price / 1000).toLocaleString()}K
+                    </span>
                   </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="h-8 w-8 md:h-10 md:w-10 bg-gray-900 rounded-full flex items-center justify-center text-white shadow-lg shadow-gray-900/20 group-hover:scale-110 group-hover:bg-purple-600 group-hover:shadow-purple-600/30 transition-all duration-300"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="w-4 h-4 md:w-5 md:h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
             ))
@@ -814,88 +814,94 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. BLACK COLLECTION - MODERN DARK MODE STYLE */}
+      {/* 6. BLACK COLLECTION - MODERN DARK MODE STYLE (RESPONSIVE GRID) */}
       {blackCollection.length > 0 && (
         <section
           ref={blackCollectionRef}
-          className="max-w-7xl mx-auto px-6 mb-32 scroll-mt-24"
+          className="max-w-7xl mx-auto px-4 md:px-6 mb-32 scroll-mt-24"
         >
           {/* Section Header */}
-          <div className="mb-16 text-center relative">
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[5rem] md:text-[8rem] font-black text-gray-100 opacity-40 select-none whitespace-nowrap z-0 blur-sm">
+          <div className="mb-12 md:mb-16 text-center relative">
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[4rem] md:text-[8rem] font-black text-gray-100 opacity-40 select-none whitespace-nowrap z-0 blur-sm">
               BLACK OPS
             </span>
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase mb-3">
+              <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase mb-3">
                 The{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-black">
                   Dark Side
                 </span>
               </h2>
               <div className="h-1 w-24 bg-black mx-auto rounded-full mb-4"></div>
-              <p className="text-gray-500 font-medium text-lg">
+              <p className="text-gray-500 font-medium text-sm md:text-lg">
                 Stealth mode activated. Essential black rotation.
               </p>
             </div>
           </div>
 
-          {/* Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* GRID LAYOUT:
+              - grid-cols-2 (Mobile)
+              - grid-cols-3 (Desktop)
+              - gap-3 (Mobile) -> gap-8 (Desktop)
+          */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
             {blackCollection.map((item) => (
-              /* === UPDATE DI SINI === 
-                   Menambahkan onClick dan cursor-pointer 
-                */
               <div
                 key={item.id}
                 onClick={() => navigate(`/product/products/${item.id}`)}
-                className="group relative bg-[#0F0F0F] rounded-[2.5rem] p-6 overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-2 cursor-pointer"
+                // Kurangi padding dan rounding di mobile (p-3, rounded-2xl)
+                className="group relative bg-[#0F0F0F] rounded-2xl md:rounded-[2.5rem] p-3 md:p-6 overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-2 cursor-pointer h-full flex flex-col justify-between"
               >
                 {/* Background Accents */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[50px] -translate-y-1/2 translate-x-1/2 group-hover:bg-white/10 transition-colors"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-white/5 rounded-full blur-[50px] -translate-y-1/2 translate-x-1/2 group-hover:bg-white/10 transition-colors"></div>
 
-                {/* Badge */}
-                <div className="absolute top-6 left-6 z-20">
-                  <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase rounded-full">
+                {/* Badge (Kecilkan font di mobile) */}
+                <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20">
+                  <span className="px-2 py-1 md:px-3 md:py-1 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[8px] md:text-[10px] font-bold tracking-widest uppercase rounded-full">
                     Premium
                   </span>
                 </div>
 
-                {/* Image Area with Contrast Glow */}
-                <div className="relative h-[260px] flex items-center justify-center mb-6 z-10">
-                  {/* Glow behind the shoe so black shoe pops on dark bg */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                {/* Image Area */}
+                <div>
+                  {/* Tinggi gambar dikurangi di mobile (h-[140px]) */}
+                  <div className="relative h-[140px] md:h-[260px] flex items-center justify-center mb-2 md:mb-6 z-10">
+                    {/* Glow */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-24 h-24 md:w-40 md:h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                    </div>
+
+                    {/* Animated Image */}
+                    <AnimatedImage
+                      src={item.image_url}
+                      alt={item.name}
+                      className="relative z-10 w-[95%] h-[95%] object-contain drop-shadow-2xl transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-[15deg] group-hover:translate-x-2"
+                    />
                   </div>
 
-                  {/* Animated Image Component */}
-                  <AnimatedImage
-                    src={item.image_url}
-                    alt={item.name}
-                    className="relative z-10 w-[95%] h-[95%] object-contain drop-shadow-2xl transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-[15deg] group-hover:translate-x-2"
-                  />
-                </div>
-
-                {/* Content Area */}
-                <div className="relative z-20 flex items-end justify-between border-t border-white/10 pt-5">
-                  <div>
-                    <h3 className="text-xl font-bold text-white leading-tight mb-1 group-hover:text-gray-300 transition-colors">
+                  {/* Content Area */}
+                  <div className="relative z-20 px-1 md:px-0">
+                    <h3 className="text-sm md:text-xl font-bold text-white leading-tight mb-1 group-hover:text-gray-300 transition-colors line-clamp-1">
                       {item.name}
                     </h3>
-                    <p className="text-gray-500 text-xs font-medium uppercase tracking-wider mb-2">
+                    <p className="text-gray-500 text-[10px] md:text-xs font-medium uppercase tracking-wider mb-2 truncate">
                       {item.category || "Running / Lifestyle"}
                     </p>
-                    <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-                      Rp {(item.price / 1000).toLocaleString()}K
-                    </p>
                   </div>
+                </div>
 
-                  {/* Action Button */}
-                  <button className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-gray-200 hover:scale-110 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                {/* Footer (Price & Button) */}
+                <div className="relative z-20 flex items-center justify-between border-t border-white/10 pt-2 md:pt-5 mt-auto px-1 md:px-0">
+                  <p className="text-sm md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                    Rp {(item.price / 1000).toLocaleString()}K
+                  </p>
+
+                  <button className="w-8 h-8 md:w-12 md:h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-gray-200 hover:scale-110 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-5 h-5"
+                      className="w-4 h-4 md:w-5 md:h-5"
                     >
                       <path
                         fillRule="evenodd"

@@ -109,18 +109,19 @@ export default function ProductDetail() {
   const [newRating, setNewRating] = useState(5);
   const [user, setUser] = useState(null);
 
-  const reviewsRef = useRef(null); 
+  const reviewsRef = useRef(null);
 
   // --- LOGIKA UKURAN BERDASARKAN TIPE ---
   const apparelSizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const shoeSizes = [38, 39, 40, 40.5, 41, 42, 42.5, 43, 44, 45, 46];
 
-const isApparel = 
-      type === 'apparel' || 
-      (product?.category && /apparel|hoodie|shirt|jacket|pants|jersey/i.test(product.category));
+  const isApparel =
+    type === "apparel" ||
+    (product?.category &&
+      /apparel|hoodie|shirt|jacket|pants|jersey/i.test(product.category));
 
   // VARIABEL FINAL UKURAN: Dipilih berdasarkan 'type' dari URL
- const sizes = isApparel ? apparelSizes : shoeSizes;
+  const sizes = isApparel ? apparelSizes : shoeSizes;
   // ------------------------------------
 
   // LOGIKA UTAMA
@@ -145,6 +146,45 @@ const isApparel =
       });
       toast.success(`${product.name} added to Wishlist!`); // --- NOTIFIKASI BARU ---
     }
+  };
+
+  // --- HANDLE SIZE SELECTION (DENGAN PROTEKSI GUEST) ---
+  const handleSizeSelect = (size) => {
+    if (!user) {
+      toast(
+        (t) => (
+          <div className="flex flex-col items-center gap-3 p-1">
+            <span className="text-sm font-medium text-gray-800">
+              Please log in to select a size
+            </span>
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                navigate("/login");
+              }}
+              className="bg-black text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors"
+            >
+              Login Page
+            </button>
+          </div>
+        ),
+        {
+          duration: 4000,
+          style: {
+            border: "1px solid #E5E7EB",
+            padding: "16px",
+            color: "#1F2937",
+            borderRadius: "16px",
+            background: "#fff",
+            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+          },
+        }
+      );
+      return;
+    }
+
+    // 3. Jika User Login, pilih size seperti biasa
+    setSelectedSize(size);
   };
 
   const handleAddToCart = () => {
@@ -207,12 +247,21 @@ const isApparel =
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // === PERBAIKAN DI SINI ===
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
+          const parsedUser = JSON.parse(storedUser);
 
-        // === 1. Ambil URL Backend dari Environment Variable ===
+          // VALIDASI GUEST:
+          // Jika email mengandung 'guest', paksa state user jadi NULL
+          if (parsedUser.email && parsedUser.email.includes("guest")) {
+            setUser(null);
+          } else {
+            setUser(parsedUser);
+          }
+        }
+        // =========================
+
         const API_URL = import.meta.env.VITE_API_BASE_URL;
 
         // === 2. Gunakan URL tersebut untuk fetch Detail Produk ===
@@ -319,15 +368,14 @@ const isApparel =
 
   const handleScrollToReviews = () => {
     // 1. PAKSA BUKA Accordion Review terlebih dahulu
-    setOpenAccordion('reviews'); 
+    setOpenAccordion("reviews");
 
     // 2. Beri jeda sedikit (300ms) agar browser sempat me-render accordion yang terbuka
-    // baru kemudian lakukan scrolling.
     setTimeout(() => {
-        reviewsRef.current?.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' // Scroll hingga bagian atas review pas di atas layar
-        });
+      reviewsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start", // Scroll hingga bagian atas review pas di atas layar
+      });
     }, 300);
   };
 
@@ -346,25 +394,30 @@ const isApparel =
           <span className="text-gray-300">/</span>
 
           <span
-           onClick={() => {
-                if (type === 'sale_products') { // Handle SALE
-                    navigate('/sale');
-                } else if (type === 'products') {
-                    const isApparel = product.category?.toLowerCase().match(/hoodie|shirt|jacket|pants|jersey/);
-                    navigate(isApparel ? '/apparel' : '/sneakers');
-                } else {
-                    navigate(`/${type}`);
+            onClick={() => {
+              if (type === "sale_products") {
+                // Handle SALE
+                navigate("/sale");
+              } else if (type === "products") {
+                const isApparel = product.category
+                  ?.toLowerCase()
+                  .match(/hoodie|shirt|jacket|pants|jersey/);
+                navigate(isApparel ? "/apparel" : "/sneakers");
+              } else {
+                navigate(`/${type}`);
               }
             }}
             className="cursor-pointer hover:text-black transition-colors"
           >
-           {type === "sale_products" 
-  ? "SALE" 
-  : type === "products"
-    ? product.category?.toLowerCase().match(/hoodie|shirt|jacket|pants|jersey/)
-      ? "APPAREL"
-      : "SNEAKERS"
-    : type}
+            {type === "sale_products"
+              ? "SALE"
+              : type === "products"
+              ? product.category
+                  ?.toLowerCase()
+                  .match(/hoodie|shirt|jacket|pants|jersey/)
+                ? "APPAREL"
+                : "SNEAKERS"
+              : type}
           </span>
 
           <span className="text-gray-300">/</span>
@@ -449,8 +502,8 @@ const isApparel =
                 </span>
 
                 <div
-                  className="flex items-center gap-2 cursor-pointer group" 
-                  onClick={handleScrollToReviews} 
+                  className="flex items-center gap-2 cursor-pointer group"
+                  onClick={handleScrollToReviews}
                 >
                   <div className="flex items-center gap-3 text-sm border-l-2 border-gray-200 pl-6 py-1">
                     <StarRating rating={Math.round(averageRating)} />
@@ -472,7 +525,6 @@ const isApparel =
             {/* SIZE SELECTOR */}
             <div className="mb-10">
               <div className="flex justify-between items-end mb-5">
-                {/* LABEL DINAMIS */}
                 <span className="font-bold text-sm uppercase tracking-wider text-gray-900">
                   {type === "apparel" ? "Select Size" : "Select Size (EU)"}
                 </span>
@@ -480,29 +532,34 @@ const isApparel =
                   Size Guide
                 </button>
               </div>
+
               <div className="grid grid-cols-4 gap-3">
                 {sizes.map((size) => {
                   const isSelected = selectedSize === size;
                   return (
                     <button
                       key={size}
-                      onClick={() => setSelectedSize(size)}
-                      disabled={!user && !isSelected}
-                      className={`h-14 rounded-xl border-2 text-sm font-bold transition-all duration-200 relative overflow-hidden
-                                ${
-                                  isSelected
-                                    ? "bg-black text-white border-black shadow-md transform scale-[1.02]"
-                                    : "bg-white text-gray-900 border-gray-200 hover:border-black hover:bg-gray-50"
-                                }`}
+                      // UBAH DI SINI: Gunakan handler baru
+                      onClick={() => handleSizeSelect(size)}
+                      // HAPUS DISABLED AGAR BISA DIKLIK GUEST
+                      // disabled={!user && !isSelected}
+
+                      className={`h-14 rounded-xl border-2 text-sm font-bold transition-all duration-200 relative overflow-hidden active:scale-95
+                        ${
+                          isSelected
+                            ? "bg-black text-white border-black shadow-md transform scale-[1.02]"
+                            : "bg-white text-gray-900 border-gray-200 hover:border-black hover:bg-gray-50"
+                        }`}
                     >
                       {size}
                     </button>
                   );
                 })}
               </div>
+
               {!selectedSize && (
-                <p className="text-xs font-medium text-red-500 mt-3 animate-pulse">
-                  Please select a size to proceed.
+                <p className="text-xs font-medium text-gray-400 mt-3">
+                  * Select a size to add to bag
                 </p>
               )}
             </div>
@@ -661,7 +718,7 @@ const isApparel =
               <div ref={reviewsRef} className="scroll-mt-32">
                 <AccordionItem
                   title={`Reviews (${reviews.length})`}
-                  isOpen={openAccordion === 'reviews'}
+                  isOpen={openAccordion === "reviews"}
                   onClick={() => toggleAccordion("reviews")}
                 >
                   <div className="space-y-8 py-4">
