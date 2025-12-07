@@ -131,7 +131,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white font-poppins overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 font-poppins overflow-x-hidden transition-colors duration-300">
       <Navbar />
 
       {/* ===========================
@@ -139,7 +139,7 @@ export default function Home() {
          =========================== */}
       <section className="relative w-full min-h-[85vh] lg:min-h-screen flex items-center justify-center pt-20 pb-12 px-4 overflow-hidden">
         {/* Clean Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"></div>
 
         {/* Subtle Accent */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FF5500] to-transparent opacity-60"></div>
@@ -158,12 +158,12 @@ export default function Home() {
 
             {/* Main Headline */}
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9]">
-              <span className="block text-gray-900">Step Into</span>
+              <span className="block text-gray-900 dark:text-white">Step Into</span>
               <span className="block text-[#FF5500]">Greatness</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-gray-500 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
+            <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
               Premium authentic sneakers, curated for those who demand the best.
             </p>
 
@@ -177,7 +177,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => scrollToSection(blackCollectionRef)}
-                className="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-gray-900 transition-all"
+                className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-gray-500 transition-all"
               >
                 Explore
               </button>
@@ -269,11 +269,11 @@ export default function Home() {
                 className="absolute top-0 right-[5%] xl:right-[15%] cursor-pointer group/card"
                 onClick={() => navigate("/product/sneakers/3")}
               >
-                <div className="bg-white p-5 rounded-2xl shadow-xl border border-gray-100 w-64 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 w-64 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <p className="text-xs text-gray-400 font-medium mb-1">Featured</p>
-                      <h3 className="font-bold text-gray-900 text-sm leading-tight">Nike P-6000 Metallic Silver</h3>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight">Nike P-6000 Metallic Silver</h3>
                     </div>
                     <span className="text-xs bg-[#FF5500] text-white px-2 py-1 rounded-lg font-medium">-19%</span>
                   </div>
@@ -286,7 +286,7 @@ export default function Home() {
                   <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                     <div>
                       <p className="text-xs text-gray-400 line-through">Rp 1.800.000</p>
-                      <p className="text-lg font-bold text-gray-900">Rp 1.460.000</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white">Rp 1.460.000</p>
                     </div>
                     <button className="w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center hover:bg-[#FF5500] transition-colors">
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -327,7 +327,7 @@ export default function Home() {
           2. BRAND LOGOS (DESKTOP ONLY)
           Tambahkan 'hidden md:block' agar hilang di mobile
          =========================== */}
-      <section className="hidden md:block py-10 border-y-2 border-gray-200/50 bg-white relative overflow-hidden">
+      <section className="hidden md:block py-10 border-y-2 border-gray-200/50 dark:border-gray-700/50 bg-white dark:bg-gray-900 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           {/* Optional: Subtitle */}
           <p className="text-center text-gray-400 text-xs font-medium uppercase tracking-widest mb-6 hidden sm:block">
@@ -427,14 +427,14 @@ export default function Home() {
                 Curated Collection
               </span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight">
               TOP{" "}
               <span className="relative inline-block">
                 PICKS
                 <span className="absolute bottom-1 left-0 w-full h-2 md:h-3 bg-orange-200/50 -z-10 rounded-sm transform -rotate-1"></span>
               </span>
             </h2>
-            <p className="text-gray-500 mt-2 md:mt-4 text-sm md:text-lg">
+            <p className="text-gray-500 dark:text-gray-400 mt-2 md:mt-4 text-sm md:text-lg">
               The most sought-after silhouettes of the season.
             </p>
           </div>
@@ -443,7 +443,7 @@ export default function Home() {
           <div className="hidden md:flex gap-4">
             <button
               onClick={() => scroll("left")}
-              className="group w-14 h-14 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:border-black transition-all duration-300 shadow-sm hover:shadow-xl"
+              className="group w-14 h-14 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-center hover:bg-black hover:border-black transition-all duration-300 shadow-sm hover:shadow-xl"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -774,9 +774,7 @@ export default function Home() {
         >
           {/* Section Header */}
           <div className="mb-12 md:mb-16 text-center relative">
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[4rem] md:text-[8rem] font-black text-gray-100 opacity-40 select-none whitespace-nowrap z-0 blur-sm">
-              BLACK OPS
-            </span>
+
             <div className="relative z-10">
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase mb-3">
                 The{" "}

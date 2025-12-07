@@ -306,7 +306,7 @@ export default function Sneakers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-poppins">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-poppins transition-colors duration-300">
       <Navbar />     {" "}
       <div className="pt-24 md:pt-32 pb-32 md:pb-20 max-w-7xl mx-auto px-4 md:px-6">
 

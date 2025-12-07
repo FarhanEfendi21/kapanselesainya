@@ -33,7 +33,7 @@ export default function Cart() {
   // === TAMPILAN KOSONG (EMPTY STATE) ===
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 font-poppins flex flex-col">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-poppins flex flex-col transition-colors duration-300">
         <Navbar />
         <div className="flex-grow flex flex-col items-center justify-center text-center px-6 pt-20 animate-fade-in">
           <div className="relative mb-8 group">
@@ -76,7 +76,7 @@ export default function Cart() {
 
   // === TAMPILAN UTAMA (CART FILLED) ===
   return (
-    <div className="min-h-screen bg-[#F8F9FA] font-poppins flex flex-col">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-gray-900 font-poppins flex flex-col transition-colors duration-300">
       <Navbar />
 
       <main className="flex-grow pt-32 pb-40 md:pt-40 md:pb-24 max-w-7xl mx-auto px-4 md:px-8 w-full">

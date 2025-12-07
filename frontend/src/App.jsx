@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./Context/CartContext.jsx";
 import { WishlistProvider } from "./Context/WishlistContext.jsx";
+import { ThemeProvider } from "./Context/ThemeContext.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 
-// Import Pages - Laluan diperbetulkan
+// Import Pages
 import Splash from "./pages/Splash.jsx";
 import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
@@ -63,37 +64,39 @@ function App() {
   }, [isOffline]);
 
   return (
-    <CartProvider>
-      <WishlistProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          {isOffline && (
-            <div className="bg-red-500 text-white text-xs font-bold text-center py-1 fixed top-0 w-full z-[100]">
-              OFFLINE MODE - GUEST ACCESS
-            </div>
-          )}
+    <ThemeProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            {isOffline && (
+              <div className="bg-red-500 text-white text-xs font-bold text-center py-1 fixed top-0 w-full z-[100]">
+                OFFLINE MODE - GUEST ACCESS
+              </div>
+            )}
 
-          <Routes>
-            <Route path="/" element={<Splash />} />
-            <Route path="/login" element={<Login />} />
+            <Routes>
+              <Route path="/" element={<Splash />} />
+              <Route path="/login" element={<Login />} />
 
-            {/* Layout membungkus semua halaman utama */}
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/sneakers" element={<Sneakers />} />
-              <Route path="/apparel" element={<Apparel />} />
-              <Route path="/sale" element={<Sale />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/product/:type/:id" element={<ProductDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </WishlistProvider>
-    </CartProvider>
+              {/* Layout membungkus semua halaman utama */}
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/catalog" element={<Catalog />} />
+                <Route path="/sneakers" element={<Sneakers />} />
+                <Route path="/apparel" element={<Apparel />} />
+                <Route path="/sale" element={<Sale />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/product/:type/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </WishlistProvider>
+      </CartProvider>
+    </ThemeProvider>
   );
 }
 

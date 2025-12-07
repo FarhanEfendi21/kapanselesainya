@@ -102,7 +102,7 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] font-poppins">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-gray-900 font-poppins transition-colors duration-300">
       <Navbar />
       <Toaster
         position="bottom-center"

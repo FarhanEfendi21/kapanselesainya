@@ -3,6 +3,46 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useTheme } from "../Context/ThemeContext";
+
+// Dark Mode Setting Row Component
+const DarkModeSettingRow = () => {
+  const { isDark, toggleTheme } = useTheme();
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-gray-900 dark:bg-gray-700 rounded-full flex items-center justify-center">
+          {isDark ? (
+            <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          )}
+        </div>
+        <div>
+          <p className="font-semibold text-gray-900 dark:text-white text-sm">Dark Mode</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {isDark ? 'Currently enabled' : 'Currently disabled'}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={toggleTheme}
+        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${isDark ? 'bg-[#FF5500]' : 'bg-gray-300 dark:bg-gray-600'
+          }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${isDark ? 'translate-x-6' : 'translate-x-1'
+            }`}
+        />
+      </button>
+    </div>
+  );
+};
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -109,7 +149,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="min-h-screen bg-white font-poppins">
+      <div className="min-h-screen bg-white dark:bg-gray-900 font-poppins transition-colors duration-300">
         <Navbar />
 
         <div className="pt-20 pb-24 px-4 max-w-2xl mx-auto">
@@ -174,7 +214,18 @@ export default function Profile() {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-100 mb-6"></div>
+          <div className="border-t border-gray-100 dark:border-gray-700 mb-6"></div>
+
+          {/* Settings Section */}
+          <div className="mb-6">
+            <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
+              Settings
+            </h3>
+            <DarkModeSettingRow />
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-gray-100 dark:border-gray-700 mb-6"></div>
 
           {/* Order History Section */}
           <div>

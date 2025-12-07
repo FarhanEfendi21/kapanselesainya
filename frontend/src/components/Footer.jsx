@@ -7,7 +7,7 @@ export default function Footer({ showOnMobile = false }) {
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <footer className={`bg-gradient-to-b from-gray-50 to-white font-poppins border-t border-gray-100 pb-24 md:pb-0 ${showOnMobile ? '' : 'hidden md:block'}`}>
+    <footer className={`bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 font-poppins border-t border-gray-100 dark:border-gray-800 pb-24 md:pb-0 transition-colors duration-300 ${showOnMobile ? '' : 'hidden md:block'}`}>
 
       {/* Decorative Top Accent */}
       <div className="h-1 bg-gradient-to-r from-[#FF5500] via-orange-400 to-[#FF5500]"></div>

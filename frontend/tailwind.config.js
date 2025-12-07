@@ -1,28 +1,29 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      // 1. Font Family (Kode Lama Anda)
+      // 1. Font Family
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'], 
+        sans: ['Poppins', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
       },
-      // 2. Warna Custom (Kode Lama Anda)
+      // 2. Warna Custom
       colors: {
-        primary: '#2563EB', 
+        primary: '#2563EB',
       },
-      // 3. ANIMASI BARU (Wajib untuk Marquee & Hero Section)
+      // 3. ANIMASI
       animation: {
-        marquee: 'marquee 25s linear infinite', // Animasi teks berjalan
-        blob: "blob 7s infinite", // Animasi background bulat di Hero
+        marquee: 'marquee 25s linear infinite',
+        blob: "blob 7s infinite",
         'fade-in': 'fadeIn 0.5s ease-out',
         'fade-in-down': 'fadeInDown 0.8s ease-out',
       },
-      // 4. KEYFRAMES (Definisi Gerakan)
+      // 4. KEYFRAMES
       keyframes: {
         marquee: {
           '0%': { transform: 'translateX(0%)' },

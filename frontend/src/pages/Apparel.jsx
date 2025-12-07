@@ -193,7 +193,7 @@ export default function Apparel() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-poppins">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-poppins transition-colors duration-300">
       <Navbar />
 
       <div className="pt-32 pb-20 max-w-7xl mx-auto px-6">

@@ -263,7 +263,7 @@ export default function Sale() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-poppins">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-poppins transition-colors duration-300">
       <Navbar />
 
       {/* INJEKSI CSS ANIMASI KHUSUS HALAMAN INI */}

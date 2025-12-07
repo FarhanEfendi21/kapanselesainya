@@ -5,6 +5,7 @@ import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 import { useCart } from "../Context/CartContext";
 import { useWishlist } from "../Context/WishlistContext";
 
+
 const catalogCategories = [
   {
     title: "Popular Brands",
@@ -134,7 +135,7 @@ export default function Navbar() {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-poppins ${isScrolled || showCatalog
-          ? "bg-white/90 backdrop-blur-md shadow-sm py-3"
+          ? "bg-white/90 dark:bg-gray-900/95 backdrop-blur-md shadow-sm py-3"
           : "bg-transparent py-5"
           }`}
         onMouseLeave={() => setShowCatalog(false)}
@@ -146,7 +147,7 @@ export default function Navbar() {
           <div className="flex-shrink-0 z-20">
             <Link to="/home" className="flex items-center gap-2 group">
               <h1 className="text-2xl md:text-3xl font-black italic tracking-tighter select-none">
-                <span className="text-gray-900 group-hover:text-black transition-colors">
+                <span className="text-gray-900 dark:text-white group-hover:text-black dark:group-hover:text-gray-200 transition-colors">
                   TRUE
                 </span>
                 <span className="text-[#FF5500]">KICKS</span>
@@ -224,6 +225,8 @@ export default function Navbar() {
              ACTION BUTTONS (RIGHT)
           ================================================== */}
           <div className="flex items-center gap-3 md:gap-5 flex-shrink-0 z-20">
+
+
             {/* === WISHLIST BUTTON (MODERN STYLE) === */}
             <div className="relative hidden md:block">
               <button
