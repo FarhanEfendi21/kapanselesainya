@@ -17,19 +17,11 @@ export default function Profile() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState(null);
 
-  // 1. Ambil data user dari Local Storage
   const storedUser = JSON.parse(localStorage.getItem('user'));
-
-  // 2. Tentukan apakah user adalah Guest atau User asli
   const isGuest = !storedUser || storedUser.email === 'guest@truekicks.com' || storedUser.full_name === 'Guest';
-
-  // Data user yang akan ditampilkan (Fallback ke data Guest jika null)
   const user = storedUser || { full_name: 'Guest', email: 'guest@truekicks.com' };
 
-  // State untuk form edit
-  const [editForm, setEditForm] = useState({
-    full_name: user.full_name
-  });
+  const [editForm, setEditForm] = useState({ full_name: user.full_name });
 
   // Fetch Order History
   useEffect(() => {
@@ -38,7 +30,6 @@ export default function Profile() {
         setLoadingOrders(false);
         return;
       }
-
       try {
         const API_URL = import.meta.env.VITE_API_BASE_URL;
         const response = await axios.get(`${API_URL}/api/orders/user/${user.id}`);
@@ -50,11 +41,9 @@ export default function Profile() {
         setLoadingOrders(false);
       }
     };
-
     fetchOrders();
   }, [user.id, isGuest]);
 
-  // Format Price
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -63,7 +52,6 @@ export default function Profile() {
     }).format(price);
   };
 
-  // Format Date - Simple
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("id-ID", {
       day: "numeric",
@@ -78,25 +66,8 @@ export default function Profile() {
     navigate("/login");
   };
 
-  const handleGuestExit = () => {
-    handleLogout();
-  };
-
-  const handleMainAction = () => {
-    if (isGuest) {
-      navigate("/login");
-    } else {
-      setShowEditModal(true);
-    }
-  };
-
   const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
   };
 
   const handleImageChange = (e) => {
@@ -116,405 +87,296 @@ export default function Profile() {
     localStorage.removeItem('profileImage');
   };
 
-  const handleEditChange = (e) => {
-    setEditForm({
-      ...editForm,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const handleSaveProfile = () => {
-    const updatedUser = {
-      ...user,
-      full_name: editForm.full_name
-    };
+    const updatedUser = { ...user, full_name: editForm.full_name };
     localStorage.setItem('user', JSON.stringify(updatedUser));
     setShowEditModal(false);
     window.location.reload();
   };
 
-  // Get status badge color
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'completed':
       case 'delivered':
-        return 'bg-green-100 text-green-700';
+        return 'text-green-600 bg-green-50';
       case 'processing':
       case 'shipped':
-        return 'bg-blue-100 text-blue-700';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'cancelled':
-        return 'bg-red-100 text-red-700';
+        return 'text-blue-600 bg-blue-50';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'text-gray-600 bg-gray-50';
     }
   };
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 font-poppins">
+      <div className="min-h-screen bg-white font-poppins">
         <Navbar />
 
-        {/* Main Content */}
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="pt-20 pb-24 px-4 max-w-2xl mx-auto">
 
-          {/* Header Section */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="mt-2 text-gray-600">Manage your profile information and view order history.</p>
+          {/* Profile Header - Minimalist */}
+          <div className="py-8 text-center">
+            {/* Avatar */}
+            <div className="relative inline-block mb-4">
+              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-50 shadow-sm">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-xl font-semibold text-gray-400">{getInitials(user.full_name)}</span>
+                )}
+              </div>
+              {!isGuest && (
+                <label className="absolute bottom-0 right-0 w-7 h-7 bg-black rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors shadow-md">
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                </label>
+              )}
+            </div>
+
+            {/* Name & Email */}
+            <h1 className="text-xl font-semibold text-gray-900">{user.full_name}</h1>
+            <p className="text-sm text-gray-400 mt-0.5">{user.email}</p>
+
+            {isGuest && (
+              <span className="inline-block mt-3 text-xs font-medium text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                Guest Mode
+              </span>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Quick Actions */}
+          <div className="flex gap-3 mb-8">
+            {isGuest ? (
+              <button
+                onClick={() => navigate("/login")}
+                className="flex-1 py-3 bg-black text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors"
+              >
+                Create Account
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => setShowEditModal(true)}
+                  className="flex-1 py-3 bg-gray-100 text-gray-900 text-sm font-medium rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Edit Profile
+                </button>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="py-3 px-6 text-red-500 text-sm font-medium rounded-xl border border-gray-200 hover:bg-red-50 hover:border-red-200 transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
 
-            {/* Left Column: Profile Card */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-28">
+          {/* Divider */}
+          <div className="border-t border-gray-100 mb-6"></div>
 
-                {/* Cover Background */}
-                <div className="h-32 bg-gradient-to-r from-gray-900 to-gray-800 relative">
-                  {isGuest && (
-                    <div className="absolute top-4 right-4">
-                      <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full border border-white/30">
-                        Guest Mode
-                      </span>
-                    </div>
-                  )}
-                </div>
+          {/* Order History Section */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-gray-900">Order History</h2>
+              <span className="text-xs text-gray-400">{orders.length} orders</span>
+            </div>
 
-                {/* Profile Info */}
-                <div className="px-6 pb-6 relative">
-                  {/* Avatar */}
-                  <div className="-mt-12 mb-4 flex justify-center">
-                    <div className="relative group">
-                      <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg">
-                        <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                          {profileImage ? (
-                            <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                          ) : (
-                            <span className="text-2xl font-bold text-gray-400">{getInitials(user.full_name)}</span>
-                          )}
+            {isGuest ? (
+              <div className="text-center py-12 bg-gray-50 rounded-2xl">
+                <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <p className="text-sm text-gray-400">Login to view orders</p>
+              </div>
+            ) : loadingOrders ? (
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="animate-pulse h-16 bg-gray-50 rounded-xl"></div>
+                ))}
+              </div>
+            ) : orders.length === 0 ? (
+              <div className="text-center py-12 bg-gray-50 rounded-2xl">
+                <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <p className="text-sm text-gray-400 mb-3">No orders yet</p>
+                <button
+                  onClick={() => navigate("/sneakers")}
+                  className="text-sm font-medium text-black underline underline-offset-4"
+                >
+                  Start Shopping
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {orders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="bg-gray-50 rounded-xl overflow-hidden"
+                  >
+                    {/* Order Row */}
+                    <div
+                      onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                      className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{order.items?.length || 0} Item{(order.items?.length || 0) > 1 ? 's' : ''}</p>
+                          <p className="text-xs text-gray-400">{formatDate(order.created_at)}</p>
                         </div>
                       </div>
-
-                      {/* Edit Avatar Overlay */}
-                      {!isGuest && (
-                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer m-1">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                        </label>
-                      )}
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-gray-900">{formatPrice(order.total_price)}</p>
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${getStatusColor(order.status)}`}>
+                            {order.status || 'Processing'}
+                          </span>
+                        </div>
+                        <svg
+                          className={`w-4 h-4 text-gray-400 transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`}
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
                     </div>
+
+                    {/* Expanded Items */}
+                    {expandedOrder === order.id && (
+                      <div className="px-4 pb-4 space-y-2">
+                        {order.items?.map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-3 p-2 bg-white rounded-lg">
+                            <img
+                              src={item.image || item.image_url}
+                              alt={item.name}
+                              className="w-10 h-10 object-contain rounded"
+                              onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-gray-900 truncate">{item.name}</p>
+                              <p className="text-[10px] text-gray-400">Size {item.size} × {item.quantity}</p>
+                            </div>
+                            <p className="text-xs font-medium text-gray-600">{formatPrice(item.price * item.quantity)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-                  {/* Name & Email */}
-                  <div className="text-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">{user.full_name}</h2>
-                    <p className="text-sm text-gray-500">{user.email}</p>
-                  </div>
+        </div>
 
-                  {/* Actions */}
-                  <div className="space-y-3">
-                    <button
-                      onClick={handleMainAction}
-                      className={`w-full py-2.5 px-4 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2
-                        ${isGuest
-                          ? "bg-[#FF5500] text-white hover:bg-[#e04b00] shadow-lg shadow-orange-200"
-                          : "bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-200"
-                        }`}
-                    >
-                      {isGuest ? "Register Now" : "Edit Profile"}
-                    </button>
+        {/* Edit Modal - With Profile Photo Section */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Profile</h3>
 
-                    {!isGuest && profileImage && (
-                      <button
-                        onClick={removeProfileImage}
-                        className="w-full py-2.5 px-4 rounded-xl font-medium text-sm text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
-                      >
-                        Remove Photo
-                      </button>
+              {/* Profile Photo Section */}
+              <div className="flex items-center gap-4 mb-5 p-3 bg-gray-50 rounded-xl">
+                <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                  {profileImage ? (
+                    <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-lg font-semibold text-gray-400">{getInitials(user.full_name)}</span>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-gray-500 mb-2">Profile Photo</p>
+                  <div className="flex gap-2">
+                    <label className="text-xs font-medium text-blue-600 cursor-pointer hover:underline">
+                      Change
+                      <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                    </label>
+                    {profileImage && (
+                      <>
+                        <span className="text-gray-300">|</span>
+                        <button
+                          type="button"
+                          onClick={removeProfileImage}
+                          className="text-xs font-medium text-red-500 hover:underline"
+                        >
+                          Remove
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right Column: Details & Order History */}
-            <div className="lg:col-span-2 space-y-6">
-
-              {/* Personal Information Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-gray-900">Personal Information</h3>
-                  {!isGuest && (
-                    <button
-                      onClick={() => setShowEditModal(true)}
-                      className="text-sm text-gray-500 hover:text-gray-900 font-medium underline decoration-gray-300 underline-offset-4"
-                    >
-                      Edit
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Full Name */}
-                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Full Name</p>
-                    <p className="text-gray-900 font-semibold">{user.full_name}</p>
-                  </div>
-
-                  {/* Email */}
-                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Email Address</p>
-                    <p className="text-gray-900 font-semibold truncate" title={user.email}>{user.email}</p>
-                  </div>
-
-                  {/* Account Status */}
-                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Account Status</p>
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${isGuest ? 'bg-orange-500' : 'bg-green-500'}`}></span>
-                      <p className="text-gray-900 font-semibold">{isGuest ? "Guest" : "Active"}</p>
-                    </div>
-                  </div>
-
-                  {/* Total Orders */}
-                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Total Orders</p>
-                    <p className="text-gray-900 font-semibold">{orders.length} Orders</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Order History Card - SIMPLE VERSION */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-gray-900">Order History</h3>
-                  <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {orders.length} Orders
-                  </span>
-                </div>
-
-                {isGuest ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-500 mb-4">Login to view your order history</p>
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="px-6 py-2 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
-                    >
-                      Login Now
-                    </button>
-                  </div>
-                ) : loadingOrders ? (
-                  <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="animate-pulse">
-                        <div className="h-16 bg-gray-100 rounded-xl"></div>
-                      </div>
-                    ))}
-                  </div>
-                ) : orders.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-500 mb-4">You haven't made any orders yet</p>
-                    <button
-                      onClick={() => navigate("/sneakers")}
-                      className="px-6 py-2 bg-[#FF5500] text-white rounded-xl text-sm font-medium hover:bg-[#e04b00] transition-colors"
-                    >
-                      Start Shopping
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {orders.map((order, index) => (
-                      <div
-                        key={order.id}
-                        className="border border-gray-100 rounded-xl overflow-hidden hover:border-gray-200 transition-colors"
-                      >
-                        {/* Order Header - SIMPLE */}
-                        <div
-                          onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                          className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                              <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="font-semibold text-gray-900 text-sm">
-                                {order.items?.length || 0} Items
-                              </p>
-                              <p className="text-xs text-gray-400">{formatDate(order.created_at)}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="text-right">
-                              <p className="font-bold text-gray-900">{formatPrice(order.total_price)}</p>
-                              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(order.status)}`}>
-                                {order.status || 'Processing'}
-                              </span>
-                            </div>
-                            <svg
-                              className={`w-4 h-4 text-gray-400 transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </div>
-                        </div>
-
-                        {/* Order Details (Expandable) */}
-                        {expandedOrder === order.id && (
-                          <div className="border-t border-gray-100 p-4 bg-gray-50">
-                            {/* Items */}
-                            <div className="space-y-2">
-                              {order.items?.map((item, idx) => (
-                                <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                  <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <img
-                                      src={item.image || item.image_url}
-                                      alt={item.name}
-                                      className="w-10 h-10 object-contain"
-                                      onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }}
-                                    />
-                                  </div>
-                                  <div className="flex-grow min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                                    <p className="text-xs text-gray-500">Size: {item.size} × {item.quantity}</p>
-                                  </div>
-                                  <p className="text-sm font-bold text-gray-900">{formatPrice(item.price * item.quantity)}</p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Account Settings */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Account Settings</h3>
-
-                <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
-                  <div>
-                    <p className="font-semibold text-gray-900">Sign Out</p>
-                    <p className="text-sm text-gray-500">Securely log out of your account on this device.</p>
-                  </div>
-                  <button
-                    onClick={isGuest ? handleGuestExit : () => setShowLogoutModal(true)}
-                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:text-red-600 hover:border-red-200 transition-all"
-                  >
-                    {isGuest ? "Exit" : "Logout"}
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* Edit Profile Modal */}
-        {showEditModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl">
-              <div className="flex justify-between items-center mb-6">
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Edit Profile</h3>
-                  <p className="text-sm text-gray-500 mt-1">Update your personal details.</p>
-                </div>
-                <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Name</label>
                   <input
                     type="text"
-                    name="full_name"
                     value={editForm.full_name}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all"
-                    placeholder="Enter your full name"
+                    onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 transition-colors"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Email</label>
                   <input
                     type="email"
                     value={user.email}
                     disabled
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed"
+                    className="w-full px-3 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-400"
                   />
-                  <p className="mt-2 text-xs text-gray-500">Email address cannot be changed.</p>
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-8">
+              <div className="flex gap-2 mt-6">
                 <button
                   onClick={() => setShowEditModal(false)}
-                  className="flex-1 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveProfile}
-                  className="flex-1 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 shadow-lg shadow-gray-200 transition-all"
+                  className="flex-1 py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  Save Changes
+                  Save
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Logout Modal */}
+        {/* Logout Modal - Minimalist */}
         {showLogoutModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl text-center">
-              <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-xs p-6 shadow-xl text-center">
+              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Sign Out</h3>
-              <p className="text-gray-500 mb-8">Are you sure you want to sign out of your account?</p>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Logout?</h3>
+              <p className="text-sm text-gray-400 mb-6">You'll need to login again</p>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setShowLogoutModal(false)}
-                  className="flex-1 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex-1 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 shadow-lg shadow-red-200 transition-all"
+                  className="flex-1 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors"
                 >
-                  Sign Out
+                  Logout
                 </button>
               </div>
             </div>
