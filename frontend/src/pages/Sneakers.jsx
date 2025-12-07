@@ -107,7 +107,7 @@ export default function Sneakers() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeTypeFilter, setActiveTypeFilter] = useState(initialTypeFilter);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
   // --- DATA FILTER ---F
@@ -263,6 +263,8 @@ export default function Sneakers() {
       // Reset ke halaman 1 setiap kali filter berubah
       setCurrentPage(1);
       window.scrollTo(0, 0);
+      // Clear state agar refresh tidak re-apply filter
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]); // Jalankan setiap kali lokasi/state berubah
 
@@ -313,10 +315,10 @@ export default function Sneakers() {
         <div className="relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl md:rounded-3xl p-8 md:p-14 mb-6 md:mb-10 text-center overflow-hidden">
           {/* Gradient Accent Line - Top */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
-          
+
           {/* Subtle Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
-          
+
           {/* Content */}
           <div className="relative z-10">
             {/* Badge */}
@@ -324,12 +326,12 @@ export default function Sneakers() {
               <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
               <span className="text-orange-400 font-semibold text-[11px] md:text-xs tracking-wider uppercase">Premium Collection</span>
             </div>
-            
+
             {/* Title */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-3 md:mb-4 tracking-tight">
               ALL <span className="text-orange-500">SNEAKERS</span>
             </h1>
-            
+
             {/* Search Result */}
             {searchKeyword && (
               <div className="mb-4 flex items-center justify-center gap-2">
@@ -337,13 +339,13 @@ export default function Sneakers() {
                 <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">{searchKeyword}</span>
               </div>
             )}
-            
+
             {/* Description */}
             <p className="text-gray-400 text-sm md:text-base max-w-md mx-auto leading-relaxed">
               Discover authentic kicks from top brands.
             </p>
           </div>
-          
+
           {/* Gradient Accent Line - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
         </div>

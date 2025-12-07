@@ -68,6 +68,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const scrollRef = useRef(null);
   const topPicksRef = useRef(null);
   const blackCollectionRef = useRef(null);
@@ -223,21 +224,25 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex justify-center gap-6 text-center">
-              <div>
-                <p className="text-2xl font-bold text-gray-900">100%</p>
-                <p className="text-xs text-gray-400">Authentic</p>
+            {/* Trust Badges - Simple like Desktop */}
+            <div className="flex flex-wrap justify-center gap-4 px-4">
+              <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                <svg className="w-4 h-4 text-[#FF5500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                100% Authentic
               </div>
-              <div className="w-px bg-gray-200"></div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">Free</p>
-                <p className="text-xs text-gray-400">Shipping</p>
+              <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                <svg className="w-4 h-4 text-[#FF5500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Free Shipping
               </div>
-              <div className="w-px bg-gray-200"></div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">30</p>
-                <p className="text-xs text-gray-400">Days Return</p>
+              <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                <svg className="w-4 h-4 text-[#FF5500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                30 Days Return
               </div>
             </div>
           </div>

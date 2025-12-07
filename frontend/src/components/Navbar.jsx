@@ -133,11 +133,10 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-poppins ${
-          isScrolled || showCatalog
-            ? "bg-white/90 backdrop-blur-md shadow-sm py-3"
-            : "bg-transparent py-5"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-poppins ${isScrolled || showCatalog
+          ? "bg-white/90 backdrop-blur-md shadow-sm py-3"
+          : "bg-transparent py-5"
+          }`}
         onMouseLeave={() => setShowCatalog(false)}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
@@ -175,17 +174,15 @@ export default function Navbar() {
                 onMouseEnter={() => setShowCatalog(true)}
               >
                 <div
-                  className={`flex items-center gap-1 cursor-pointer transition-colors ${
-                    showCatalog
-                      ? "text-black"
-                      : "text-gray-600 hover:text-black"
-                  }`}
+                  className={`flex items-center gap-1 cursor-pointer transition-colors ${showCatalog
+                    ? "text-black"
+                    : "text-gray-600 hover:text-black"
+                    }`}
                 >
                   CATALOG
                   <svg
-                    className={`w-3 h-3 transition-transform duration-300 ${
-                      showCatalog ? "rotate-180" : ""
-                    }`}
+                    className={`w-3 h-3 transition-transform duration-300 ${showCatalog ? "rotate-180" : ""
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -233,11 +230,10 @@ export default function Navbar() {
                 onClick={() => setShowWishlist(!showWishlist)}
                 className={`
                     group relative p-2 rounded-full transition-all duration-300
-                    ${
-                      showWishlist
-                        ? "bg-orange-50 text-[#FF5500]"
-                        : "hover:bg-gray-100 text-gray-600 hover:text-[#FF5500]"
-                    }
+                    ${showWishlist
+                    ? "bg-orange-50 text-[#FF5500]"
+                    : "hover:bg-gray-100 text-gray-600 hover:text-[#FF5500]"
+                  }
                  `}
               >
                 {/* Container Icon dengan Animasi */}
@@ -383,11 +379,10 @@ export default function Navbar() {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className={`w-6 h-6 transition-colors ${
-                  totalItems > 0
-                    ? "text-[#FF5500] fill-orange-100"
-                    : "text-gray-600 group-hover:text-black"
-                }`}
+                className={`w-6 h-6 transition-colors ${totalItems > 0
+                  ? "text-[#FF5500] fill-orange-100"
+                  : "text-gray-600 group-hover:text-black"
+                  }`}
               >
                 <path
                   strokeLinecap="round"
@@ -488,15 +483,22 @@ export default function Navbar() {
 
                         if (category.title === "Collections") {
                           if (item === "Sale & Deals") targetPath = "/sale";
-                          else if (item === "New Arrivals")
+                          else if (item === "New Arrivals") {
+                            targetPath = "/home";
                             stateData = { scrollTo: "new-arrivals" };
-                          else if (item === "Best Sellers")
+                          }
+                          else if (item === "Best Sellers") {
+                            targetPath = "/home";
                             stateData = { scrollTo: "best-sellers" };
+                          }
                         } else {
-                          const stateKey =
-                            category.title === "Categories"
-                              ? "typeFilter"
-                              : "keyword";
+                          // Popular Brands -> brand, Trending Models -> keyword, Categories -> typeFilter
+                          let stateKey = "keyword";
+                          if (category.title === "Categories") {
+                            stateKey = "typeFilter";
+                          } else if (category.title === "Popular Brands") {
+                            stateKey = "brand";
+                          }
                           stateData = { [stateKey]: item };
                         }
 
