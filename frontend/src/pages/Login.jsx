@@ -128,8 +128,8 @@ export default function Login() {
                 setActiveTab("signup");
               }}
               className={`w-1/2 pb-3 text-base font-bold transition-all relative ${activeTab === "signup"
-                  ? "text-gray-900"
-                  : "text-gray-400 hover:text-gray-600"
+                ? "text-gray-900"
+                : "text-gray-400 hover:text-gray-600"
                 }`}
             >
               Sign Up
@@ -142,8 +142,8 @@ export default function Login() {
                 setActiveTab("login");
               }}
               className={`w-1/2 pb-3 text-base font-bold transition-all relative ${activeTab === "login"
-                  ? "text-gray-900"
-                  : "text-gray-400 hover:text-gray-600"
+                ? "text-gray-900"
+                : "text-gray-400 hover:text-gray-600"
                 }`}
             >
               Log In

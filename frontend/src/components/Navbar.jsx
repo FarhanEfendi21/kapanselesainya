@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 
@@ -63,6 +63,23 @@ export default function Navbar() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const catalogRef = useRef(null);
+
+  // -----------------------------------------------
+  // CLOSE CATALOG ON CLICK OUTSIDE
+  // -----------------------------------------------
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (catalogRef.current && !catalogRef.current.contains(event.target)) {
+        setShowCatalog(false);
+      }
+    };
+
+    if (showCatalog) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showCatalog]);
 
   // -----------------------------------------------
   // LOAD USER FROM LOCAL STORAGE
@@ -134,11 +151,11 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-poppins ${isScrolled || showCatalog
-          ? "bg-white/90 dark:bg-gray-900/95 backdrop-blur-md shadow-sm py-3"
-          : "bg-transparent py-5"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 font-poppins ${isScrolled || showCatalog
+          ? "bg-white/80 dark:bg-gray-900/90 backdrop-blur-xl shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)] py-2"
+          : "bg-gradient-to-b from-white/50 to-transparent py-4"
           }`}
-        onMouseLeave={() => setShowCatalog(false)}
+        onMouseLeave={() => { }}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
           {/* ==================================================
@@ -159,31 +176,27 @@ export default function Navbar() {
              MENU (CENTER)
           ================================================== */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="hidden md:flex items-center gap-10 text-sm font-bold tracking-wide">
+            <div className="hidden md:flex items-center gap-1 text-sm font-medium bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-1.5 py-1.5">
               <Link
                 to="/home"
-                className={`${isActive(
-                  "/home"
-                )} hover:scale-105 transition-transform`}
+                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/home'
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                HOME
+                Home
               </Link>
 
               {/* CATALOG MENU */}
-              <div
-                className="relative h-full flex items-center cursor-default"
-                onMouseEnter={() => setShowCatalog(true)}
-              >
-                <div
-                  className={`flex items-center gap-1 cursor-pointer transition-colors ${showCatalog
-                    ? "text-black"
-                    : "text-gray-600 hover:text-black"
-                    }`}
+              <div className="relative h-full flex items-center">
+                <button
+                  onClick={() => setShowCatalog(!showCatalog)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200 ${showCatalog
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
                 >
-                  CATALOG
+                  Catalog
                   <svg
-                    className={`w-3 h-3 transition-transform duration-300 ${showCatalog ? "rotate-180" : ""
-                      }`}
+                    className={`w-3.5 h-3.5 transition-transform duration-300 ${showCatalog ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -191,32 +204,32 @@ export default function Navbar() {
                   >
                     <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                   </svg>
-                </div>
+                </button>
               </div>
 
               <Link
                 to="/sneakers"
-                className={`${isActive(
-                  "/sneakers"
-                )} hover:scale-105 transition-transform`}
+                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/sneakers'
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                SNEAKERS
+                Sneakers
               </Link>
 
               <Link
                 to="/apparel"
-                className={`${isActive(
-                  "/apparel"
-                )} hover:scale-105 transition-transform`}
+                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/apparel'
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                APPAREL
+                Apparel
               </Link>
 
               <Link
                 to="/sale"
-                className="text-red-500 font-bold hover:text-red-600 hover:scale-105 transition-transform"
+                className="px-4 py-2 rounded-full text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
               >
-                SALE
+                Sale
               </Link>
             </div>
           </div>
@@ -404,17 +417,17 @@ export default function Navbar() {
 
             {/* USER */}
             {user ? (
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2">
                 <Link
                   to="/profile"
-                  className="group flex items-center gap-2.5 hover:bg-gray-50 rounded-full pr-3 py-1 transition"
+                  className="group flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full pl-1 pr-3 py-1 transition-all duration-200"
                 >
                   {/* Profile Picture Circle */}
                   <div className="relative">
                     <div
-                      className="w-9 h-9 rounded-full bg-gradient-to-br from-[#FF5500] to-orange-600 
-                                    flex items-center justify-center text-white text-sm font-bold shadow-md 
-                                    ring-2 ring-white overflow-hidden"
+                      className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FF5500] to-orange-600 
+                                    flex items-center justify-center text-white text-xs font-bold 
+                                    ring-2 ring-white dark:ring-gray-800 overflow-hidden"
                     >
                       {profileImage ? (
                         <img
@@ -425,37 +438,33 @@ export default function Navbar() {
                         getInitials(user.full_name)
                       )}
                     </div>
-
                     {/* Online Indicator */}
-                    <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-white dark:border-gray-800" />
                   </div>
 
-                  <div className="hidden lg:block text-left">
-                    <p className="text-[10px] text-gray-500 leading-none">
-                      Hi,
-                    </p>
-                    <p className="text-xs font-bold text-gray-900 group-hover:text-[#FF5500] transition">
-                      {user.full_name?.split(" ")[0] || "User"}
-                    </p>
-                  </div>
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white">
+                    {user.full_name?.split(" ")[0] || "User"}
+                  </span>
                 </Link>
 
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full 
-                             font-semibold text-xs uppercase tracking-wider hover:bg-gray-800 transition active:scale-95"
+                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all"
+                  title="Logout"
                 >
-                  Logout
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                  </svg>
                 </button>
               </div>
             ) : (
               <button
                 onClick={() => navigate("/login")}
-                className="hidden md:flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-full 
-                           font-bold text-sm hover:bg-gray-800 transition active:scale-95"
+                className="hidden md:flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-2 rounded-full 
+                           font-semibold text-sm hover:bg-gray-800 dark:hover:bg-gray-100 transition-all active:scale-95"
               >
-                Log In
+                Sign In
               </button>
             )}
           </div>
@@ -466,20 +475,20 @@ export default function Navbar() {
         ================================================== */}
         {showCatalog && (
           <div
-            className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100
+            ref={catalogRef}
+            className="absolute top-full left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.15)] border-t border-gray-100 dark:border-gray-800
                        overflow-hidden transition-all duration-300 origin-top"
-            onMouseEnter={() => setShowCatalog(true)}
-            onMouseLeave={() => setShowCatalog(false)}
           >
-            <div className="max-w-7xl mx-auto px-6 py-10">
-              <div className="grid grid-cols-4 gap-8">
+            <div className="max-w-7xl mx-auto px-6 py-8">
+              <div className="grid grid-cols-4 gap-10">
                 {catalogCategories.map((category, index) => (
                   <div key={index}>
-                    <h3 className="font-black text-gray-900 text-sm uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">
+                    <h3 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <span className="w-6 h-0.5 bg-[#FF5500] rounded-full"></span>
                       {category.title}
                     </h3>
 
-                    <ul className="space-y-2.5">
+                    <ul className="space-y-2">
                       {category.items.map((item, idx) => {
                         let targetPath = "/sneakers";
                         let stateData = null;
@@ -495,7 +504,6 @@ export default function Navbar() {
                             stateData = { scrollTo: "best-sellers" };
                           }
                         } else {
-                          // Popular Brands -> brand, Trending Models -> keyword, Categories -> typeFilter
                           let stateKey = "keyword";
                           if (category.title === "Categories") {
                             stateKey = "typeFilter";
@@ -511,7 +519,7 @@ export default function Navbar() {
                               to={targetPath}
                               state={stateData}
                               onClick={() => setShowCatalog(false)}
-                              className="text-gray-500 hover:text-[#FF5500] transition text-sm font-medium"
+                              className="text-gray-500 dark:text-gray-400 hover:text-[#FF5500] dark:hover:text-[#FF5500] transition text-sm font-medium hover:translate-x-1 inline-block"
                             >
                               {item}
                             </Link>

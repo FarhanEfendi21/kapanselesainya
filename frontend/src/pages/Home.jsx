@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom"; //
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import BackInBlackBanner from "../components/BackInBlackBanner";
 
 import heroImage from "../assets/p6000-silver.png";
-import promoBanner from "../assets/backIn.png";
 import nikeLogo from "../assets/nike.png";
 import adidasLogo from "../assets/adidas.png";
 import newBalanceLogo from "../assets/newbalance.png";
@@ -364,42 +364,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===========================
-          2.1 [MOBILE ONLY] QUICK CATEGORIES
-          Pengganti logo brand, memudahkan navigasi jenis sepatu
-         =========================== */}
-      <section className="md:hidden py-6 border-b border-gray-100 bg-white">
-        <div className="px-4">
-          <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">
-            Browse by Category
-          </h3>
 
-          {/* Horizontal Scrollable Container */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-            {[
-              { name: "Running", emoji: "🏃" },
-              { name: "Lifestyle", emoji: "👟" },
-              { name: "Basketball", emoji: "🏀" },
-              { name: "Training", emoji: "🏋️" },
-              { name: "Skateboarding", emoji: "🛹" },
-              { name: "Sandals", emoji: "🩴" },
-            ].map((cat) => (
-              <button
-                key={cat.name}
-                onClick={() =>
-                  navigate("/sneakers", { state: { typeFilter: cat.name } })
-                } // Langsung filter ke halaman sneakers
-                className="flex items-center gap-2 px-5 py-3 bg-gray-50 rounded-2xl border border-gray-100 whitespace-nowrap shadow-sm active:scale-95 active:bg-gray-100 transition-all"
-              >
-                <span className="text-lg">{cat.emoji}</span>
-                <span className="text-xs font-bold text-gray-700">
-                  {cat.name}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ===========================
           3. OUR TOP PICKS (Carousel) - RESPONSIVE TUNED
@@ -718,53 +683,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. PROMO BANNER - ENHANCED VISUAL */}
-      <section className="relative w-full py-12 overflow-hidden">
-        {/* A. Background Pattern (Grid Halus) - Mengisi kekosongan */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
-        {/* B. Ambient Glow - Memberikan warna di belakang banner */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-full bg-gradient-to-r from-purple-100/50 via-transparent to-orange-100/50 blur-3xl -z-10"></div>
-
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          {/* C. Header Kecil (Penambah Konteks) */}
-          <div className="flex items-center justify-between mb-4 px-2">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-              <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">
-                Limited Time Offer
-              </span>
-            </div>
-            <span className="text-xs font-medium text-gray-400">
-              Ends in 24h
-            </span>
-          </div>
-
-          {/* D. Banner Image */}
-          <div className="rounded-[1.5rem] md:rounded-[2.5rem] p-1 bg-gradient-to-r from-gray-200 to-gray-100 shadow-2xl relative group">
-            {/* Border Gradient Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 rounded-[1.5rem] md:rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur transition-opacity duration-500 -z-10"></div>
-
-            <div className="rounded-[1.3rem] md:rounded-[2.3rem] overflow-hidden bg-white">
-              {/* Overlay saat hover */}
-              <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors z-20 pointer-events-none"></div>
-
-              <img
-                src={promoBanner}
-                alt="Back in Black Promo"
-                className="w-full h-auto block transform transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-          </div>
-
-          {/* E. Dekorasi Bawah (Opsional - Brand Text) */}
-          <div className="mt-4 text-center opacity-30">
-            <p className="text-[10px] tracking-[0.5em] font-black uppercase">
-              TrueKicks Original
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* 6. BLACK COLLECTION - MODERN DARK MODE STYLE (RESPONSIVE GRID) */}
       {blackCollection.length > 0 && (
@@ -772,22 +691,8 @@ export default function Home() {
           ref={blackCollectionRef}
           className="max-w-7xl mx-auto px-4 md:px-6 mb-32 scroll-mt-24"
         >
-          {/* Section Header */}
-          <div className="mb-12 md:mb-16 text-center relative">
-
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase mb-3">
-                The{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-black">
-                  Dark Side
-                </span>
-              </h2>
-              <div className="h-1 w-24 bg-black mx-auto rounded-full mb-4"></div>
-              <p className="text-gray-500 font-medium text-sm md:text-lg">
-                Stealth mode activated. Essential black rotation.
-              </p>
-            </div>
-          </div>
+          {/* Back In Black Banner */}
+          <BackInBlackBanner onScrollToProducts={() => window.scrollTo({ top: window.scrollY + 400, behavior: 'smooth' })} />
 
           {/* GRID LAYOUT:
               - grid-cols-2 (Mobile)
