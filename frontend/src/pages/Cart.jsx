@@ -329,26 +329,23 @@ export default function Cart() {
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                   Kode Promo
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                    placeholder="Masukkan kode promo"
-                    className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-bold uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-[#FF5500] focus:ring-2 focus:ring-orange-100 transition-all"
+                    placeholder="Masukkan kode"
+                    className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-sm font-bold uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-[#FF5500] focus:ring-2 focus:ring-orange-100 transition-all"
                   />
                   <button
                     onClick={handleApplyCoupon}
                     disabled={isCheckingCoupon || !couponCode}
-                    className="w-full sm:w-auto bg-[#FF5500] text-white px-6 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-shrink-0 bg-[#FF5500] text-white px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all active:scale-95 flex items-center justify-center gap-1"
                   >
                     {isCheckingCoupon ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Cek...</span>
-                      </>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
-                      "Gunakan"
+                      "APPLY"
                     )}
                   </button>
                 </div>

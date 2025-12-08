@@ -434,7 +434,7 @@ export default function Checkout() {
               Total to Pay
             </span>
             <span className="text-xl font-black text-[#FF5500] leading-none">
-              {formatPrice(totalPrice)}
+              {formatPrice(finalPrice)}
             </span>
           </div>
           <button
