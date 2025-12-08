@@ -159,7 +159,7 @@ export default function Navbar() {
           }`}
         onMouseLeave={() => { }}
       >
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
           {/* ==================================================
              LOGO
           ================================================== */}
@@ -175,79 +175,77 @@ export default function Navbar() {
           </div>
 
           {/* ==================================================
-             MENU (CENTER)
+             MENU (CENTER) - Hidden below lg breakpoint
           ================================================== */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="hidden md:flex items-center gap-1 text-sm font-medium bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-1.5 py-1.5">
-              <Link
-                to="/home"
-                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/home'
+          <div className="hidden lg:flex items-center gap-1 text-sm font-medium bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-1.5 py-1.5">
+            <Link
+              to="/home"
+              className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/home'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
+            >
+              Home
+            </Link>
+
+            {/* CATALOG MENU */}
+            <div className="relative h-full flex items-center">
+              <button
+                onClick={() => setShowCatalog(!showCatalog)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200 ${showCatalog
                   ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                Home
-              </Link>
-
-              {/* CATALOG MENU */}
-              <div className="relative h-full flex items-center">
-                <button
-                  onClick={() => setShowCatalog(!showCatalog)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200 ${showCatalog
-                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
+                Catalog
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-300 ${showCatalog ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
                 >
-                  Catalog
-                  <svg
-                    className={`w-3.5 h-3.5 transition-transform duration-300 ${showCatalog ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </button>
-              </div>
-
-              <Link
-                to="/sneakers"
-                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/sneakers'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
-              >
-                Sneakers
-              </Link>
-
-              <Link
-                to="/apparel"
-                className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/apparel'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
-              >
-                Apparel
-              </Link>
-
-              <Link
-                to="/sale"
-                className="px-4 py-2 rounded-full text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
-              >
-                Sale
-              </Link>
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
             </div>
+
+            <Link
+              to="/sneakers"
+              className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/sneakers'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
+            >
+              Sneakers
+            </Link>
+
+            <Link
+              to="/apparel"
+              className={`px-4 py-2 rounded-full transition-all duration-200 ${location.pathname === '/apparel'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}`}
+            >
+              Apparel
+            </Link>
+
+            <Link
+              to="/sale"
+              className="px-4 py-2 rounded-full text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
+            >
+              Sale
+            </Link>
           </div>
 
           {/* ==================================================
              ACTION BUTTONS (RIGHT)
           ================================================== */}
-          <div className="flex items-center gap-2 md:gap-4 flex-shrink-0 z-20">
+          <div className="flex items-center gap-1 md:gap-2 lg:gap-3 flex-shrink-0">
 
             {/* === SEARCH BAR === */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <SearchBar />
             </div>
 
-            {/* === WISHLIST BUTTON (MODERN STYLE) === */}
-            <div className="relative hidden md:block">
+            {/* === WISHLIST BUTTON === */}
+            <div className="relative hidden lg:block">
               <button
                 onClick={() => setShowWishlist(!showWishlist)}
                 className={`
@@ -563,7 +561,7 @@ export default function Navbar() {
             </div>
           </div>
         )}
-      </nav>
+      </nav >
     </>
   );
 }

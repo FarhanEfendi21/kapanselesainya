@@ -36,7 +36,7 @@ export default function BottomNav() {
           1. OVERLAY BACKDROP
       ======================================== */}
       <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 md:hidden
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 lg:hidden
         ${showMenu ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}
       />
 
@@ -45,7 +45,7 @@ export default function BottomNav() {
       ======================================== */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`fixed bottom-28 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 ease-out md:hidden
+        className={`fixed bottom-28 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 ease-out lg:hidden
         ${showMenu ? "translate-y-0 opacity-100 scale-100" : "translate-y-4 opacity-0 scale-95 pointer-events-none"}`}
       >
         <div className="bg-white rounded-2xl p-4 shadow-2xl shadow-black/20 border border-gray-100">
@@ -95,7 +95,7 @@ export default function BottomNav() {
           3. FLOATING CART BUTTON
       ======================================== */}
       <div
-        className={`fixed bottom-24 right-5 z-40 md:hidden transition-all duration-300 
+        className={`fixed bottom-24 right-5 z-40 lg:hidden transition-all duration-300 
         ${showMenu ? "opacity-30 scale-90" : "opacity-100 scale-100"}`}
       >
         <button
@@ -128,7 +128,7 @@ export default function BottomNav() {
       {/* ========================================
           4. MAIN BOTTOM NAV BAR
       ======================================== */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden px-4 pb-4 pt-2">
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden px-4 pb-4 pt-2">
         <div className="bg-white rounded-2xl h-16 flex justify-around items-center shadow-lg shadow-black/10 border border-gray-100 max-w-md mx-auto">
 
           {/* Home Button */}
